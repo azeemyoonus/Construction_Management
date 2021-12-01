@@ -1,18 +1,25 @@
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.*;
 
-public class ConstructionManagment {
-    public static void main(String[] args) {
-        System.out.println("Welcome to Construction Management");
+public class ConstructionManagment implements ActionListener {
 
+    public static void main(String[] args) {
+
+        System.out.println("Welcome to Construction Management");
+        ConstructionManagment construction = new ConstructionManagment();    
+    }
+    JFrame f = new JFrame();//creating instance of JFrame
+    public ConstructionManagment() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-        JFrame f=new JFrame();//creating instance of JFrame         
+        // JFrame f=new JFrame();         
         f.setSize((int)screenSize.getWidth()/2,(int)screenSize.getHeight()/2);
         f.setLocation((int)screenSize.getWidth()/4, (int)screenSize.getHeight()/4);
         f.setExtendedState(JFrame.MAXIMIZED_BOTH); //full size frame       
         f.getContentPane().setBackground(Color.decode("#f0f0f0"));       
-        f.setLayout(new GridLayout(4,0));//using no layout managers  
+        f.setLayout(new GridLayout(4,0));
 
         JPanel headerPanel= new JPanel(new FlowLayout(FlowLayout.LEFT)); 
         headerPanel.setBounds(0,0,(int)screenSize.getWidth(),(int)screenSize.getHeight()/4);          
@@ -56,6 +63,9 @@ public class ConstructionManagment {
         supervisorLoginBtn.setBackground(Color.decode("#40392f"));
         supervisorLoginBtn.setForeground(Color.decode("#ebc38a"));
         supervisorLoginBtn.setFocusPainted(false);
+        supervisorLoginBtn.addActionListener(this);
+       
+        
 
         clientLoginBtn.setBounds(30, 55,  65+((int)screenSize.getWidth())/4, 50);
         AdminLoginBtn.setBounds((int)screenSize.getWidth()/3, 55, 7+(int)screenSize.getWidth()/3, 50);       
@@ -81,10 +91,17 @@ public class ConstructionManagment {
         f.add(loginThroughPanel);
         f.add(footer);
         f.setVisible(true);//making the frame visible  
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//terminate program when closes frame
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//terminate program when closes frame       
+
+    }    
+    @Override
+    public void actionPerformed(ActionEvent e ) {
+        // TODO Auto-generated method stub
        
-
-
+        Supervisor s1 = new Supervisor();
+        // f.dispose();
+               
     }
+   
     
 }
