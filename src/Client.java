@@ -13,20 +13,21 @@ import javax.swing.*;
 public class Client extends Login implements workDetails, ActionListener {
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-    JTextField usernameField;
+    JTextField usernameField, loginUsernameField;
     JTextField fName;
     JTextField lName;
     JTextField mailIdField, phoneField;
-    JPasswordField passwordField;
+    JPasswordField passwordField, loginPasswordField;
     JPasswordField cnfPasswordField;
     Boolean loginStatus = false;
     JFrame createFrame;
     JFrame loginFrame;
-    JButton loginBtn, loginSubmitBtn, accCreateClnBtn, goTologinBtn;    
+    JButton loginBtn, loginSubmitBtn, accCreateClnBtn, goTologinBtn;
     JButton createClnBtn;
 
     Config connection = new Config();
     Connection con;
+
     /**
      * Default constructor
      */
@@ -34,10 +35,10 @@ public class Client extends Login implements workDetails, ActionListener {
         login();
     }
 
-    public void accountCreate(){
+    public void accountCreate() {
         createFrame = new JFrame();
-        createFrame.setLayout(new GridLayout(5,0));
-        createFrame.setSize((int) screenSize.getWidth() / 2, (int) (screenSize.getHeight()/2 ));
+        createFrame.setLayout(new GridLayout(5, 0));
+        createFrame.setSize((int) (screenSize.getWidth()), (int) (screenSize.getHeight() / 2));
         createFrame.setLocation((int) screenSize.getWidth() / 4, (int) screenSize.getHeight() / 4);
 
         JPanel titlePanel = new JPanel();
@@ -47,7 +48,6 @@ public class Client extends Login implements workDetails, ActionListener {
         JLabel userLabel = new JLabel();
         userLabel.setText("<html>Username</html>"); // set label value for textField1
         userLabel.setBackground(Color.DARK_GRAY);
-
 
         JLabel fnameLabel = new JLabel();
         fnameLabel.setText("<html>First Name</html>");
@@ -61,11 +61,10 @@ public class Client extends Login implements workDetails, ActionListener {
         lnameLabel.setText("<html>Last Name</html>");
         lnameLabel.setBackground(Color.DARK_GRAY);
         // create text field to get username from the user
-        
 
         fName = new JTextField(15); // set length of the text
-        lName = new  JTextField(15);
-        mailIdField = new JTextField(15);
+        lName = new JTextField(15);
+        mailIdField = new JTextField(35);
         phoneField = new JTextField(10);
 
         // create label for password
@@ -73,7 +72,7 @@ public class Client extends Login implements workDetails, ActionListener {
         passLabel.setText("<html>Password</html>"); // set label value for textField2
 
         JLabel phoneLabel = new JLabel();
-        phoneLabel.setText("<html>Phone No: </html>"); 
+        phoneLabel.setText("<html>Phone No: </html>");
 
         JLabel cnfPassLabel = new JLabel();
         cnfPassLabel.setText("<html>Confirm Password</html>");
@@ -92,13 +91,12 @@ public class Client extends Login implements workDetails, ActionListener {
         accCreateClnBtn.setForeground(Color.decode("#ebc38a"));
         accCreateClnBtn.setFocusPainted(false);
 
-
         JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         namePanel.add(fnameLabel);
         namePanel.add(fName);
         namePanel.add(lnameLabel);
         namePanel.add(lName);
-               
+
         JPanel usernamePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         usernamePanel.add(userLabel);
         usernamePanel.add(usernameField);
@@ -118,7 +116,6 @@ public class Client extends Login implements workDetails, ActionListener {
         submitPanel.setAlignmentY(SwingConstants.BOTTOM);
         submitPanel.add(accCreateClnBtn);
         submitPanel.add(goTologinBtn);
-
 
         createFrame.add(titlePanel);
         createFrame.add(namePanel);
@@ -151,14 +148,14 @@ public class Client extends Login implements workDetails, ActionListener {
         userLabel.setBackground(Color.DARK_GRAY);
 
         // create text field to get username from the user
-        usernameField = new JTextField(15); // set length of the text
+        loginUsernameField = new JTextField(15); // set length of the text
 
         // create label for password
         JLabel passLabel = new JLabel();
         passLabel.setText("<html>&nbsp;&nbsp;&nbsp;Password</html>"); // set label value for textField2
 
         // create text field to get password from the user
-        passwordField = new JPasswordField(15);
+        loginPasswordField = new JPasswordField(15);
 
         loginSubmitBtn = new JButton("<html>&nbsp;Submit</html>");
         loginSubmitBtn.setBackground(Color.decode("#40392f"));
@@ -170,23 +167,20 @@ public class Client extends Login implements workDetails, ActionListener {
         createClnBtn.setForeground(Color.decode("#ebc38a"));
         createClnBtn.setFocusPainted(false);
 
-
         JPanel usernamePanel = new JPanel();
         usernamePanel.add(userLabel);
-        usernamePanel.add(usernameField);
+        usernamePanel.add(loginUsernameField);
         // usernamePanel.setAlignmentX(alignmentX);
 
         JPanel passwordPanel = new JPanel();
         passwordPanel.add(passLabel);
-        passwordPanel.add(passwordField);
-
+        passwordPanel.add(loginPasswordField);
 
         JPanel submitPanel = new JPanel();
         submitPanel.setAlignmentY(SwingConstants.BOTTOM);
         submitPanel.add(loginSubmitBtn);
         submitPanel.add(createClnBtn);
 
-        
         loginFrame.add(titlePanel);
         loginFrame.add(usernamePanel);
         loginFrame.add(passwordPanel);
@@ -200,26 +194,63 @@ public class Client extends Login implements workDetails, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource()==loginSubmitBtn){
+        if (e.getSource() == loginSubmitBtn) {
             int supervisorId = 1;
-            loadClientPanel(supervisorId);
-            loginFrame.dispose();
-        }
-        else if (e.getSource()== createClnBtn){
+            con = connection.dbConnect();
+            String sql = "select * from logindetails where username=? and password =?";
+            try {               
+                PreparedStatement prepareStatement = con.prepareStatement(sql);
+                prepareStatement.setString(1, loginUsernameField.getText());
+                prepareStatement.setString(2, loginPasswordField.getPassword().toString());
+
+                ResultSet rs = prepareStatement.executeQuery();
+                while (rs.next()) {
+                    System.out.println(rs.getString(1) + " " + rs.getString(2));
+                }
+                loadClientPanel(supervisorId);
+                loginFrame.dispose();
+
+            } catch (SQLException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+           
+
+        } else if (e.getSource() == createClnBtn) {
             System.out.println("create an client account");
             loginFrame.dispose();
             accountCreate();
-        }
-        else if (e.getSource()== accCreateClnBtn){
+        } else if (e.getSource() == accCreateClnBtn) {
             System.out.println("Please create an account for client");
             createFrame.dispose();
             con = connection.dbConnect();
-            // String sql = "insert into "
+            String sql = "insert into client(fname,lname, mailid, phoneno) values(?,?,?,?); insert into logindetails (username, password) values (?,?)";
+            // String getCid ="select c_id from client (where )"
+            String sql1 = "insert into loginDetails values (? ,?,? ))";
+            try {
+                // if (passwordField.getPassword() == cnfPasswordField.getPassword()){
+                PreparedStatement prepareStatement = con.prepareStatement(sql);
+                prepareStatement.setString(1, fName.getText());
+                prepareStatement.setString(2, lName.getText());
+                prepareStatement.setString(3, mailIdField.getText());
+                prepareStatement.setString(4, phoneField.getText());
+                prepareStatement.setString(5, usernameField.getText());
+                prepareStatement.setString(6, passwordField.getPassword().toString());
+                int updatedCount = prepareStatement.executeUpdate();
+                System.out.println(updatedCount + "  updated ");
 
+                PreparedStatement prepareStatement1 = con.prepareStatement(sql1);
+                // prepareStatement1
+                // }
+                // else{
+                // System.out.println("Password not match");
+                // }
 
-
-        }
-        else if (e.getSource()== goTologinBtn){
+            } catch (SQLException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        } else if (e.getSource() == goTologinBtn) {
             createFrame.dispose();
             login();
         }
@@ -304,7 +335,7 @@ public class Client extends Login implements workDetails, ActionListener {
         currentArea.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
         currentArea.setBackground(Color.decode("#f29105"));
 
-        JPanel currentWorkOptions = new JPanel(new GridLayout(2, 0, 5, 5));    
+        JPanel currentWorkOptions = new JPanel(new GridLayout(2, 0, 5, 5));
 
         JButton materialBtn = new JButton("Used Materials");
         materialBtn.setBackground(Color.decode("#a39887"));
@@ -405,18 +436,19 @@ public class Client extends Login implements workDetails, ActionListener {
         JPanel dummy = new JPanel(new FlowLayout());
         dummy.setBackground(Color.decode("#f0f0f0"));
 
-
         JPanel footer = new JPanel();
         footer.setLayout(new BorderLayout());
-        JLabel footerLabel = new JLabel("<html>copyright © 2021 - Albatross Builders <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;All Rights Reserved </html>", SwingConstants.CENTER);
+        JLabel footerLabel = new JLabel(
+                "<html>copyright © 2021 - Albatross Builders <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;All Rights Reserved </html>",
+                SwingConstants.CENTER);
         footerLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-        footerLabel.setBounds(0,(int)screenSize.getHeight(), (int)screenSize.getWidth(),(int)screenSize.getHeight()/4);
+        footerLabel.setBounds(0, (int) screenSize.getHeight(), (int) screenSize.getWidth(),
+                (int) screenSize.getHeight() / 4);
         footerLabel.setForeground(Color.decode("#403f3f"));
         footer.setBackground(Color.decode("#f0f0f0"));
-        footerLabel.setBounds(0, 0,(int)screenSize.getWidth(),100);
+        footerLabel.setBounds(0, 0, (int) screenSize.getWidth(), 100);
         footerLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        footer.add(footerLabel,BorderLayout.PAGE_END);
-
+        footer.add(footerLabel, BorderLayout.PAGE_END);
 
         f.add(headerPanel);
         f.add(welcomePanel);
@@ -427,7 +459,7 @@ public class Client extends Login implements workDetails, ActionListener {
         f.add(forPreviousWorkLabel);
         f.add(previousWorkPanel);
         f.add(previousWorkOptions);
-f.add(footer);
+        f.add(footer);
         f.setVisible(true);// making the frame visible
         // f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);// terminate program when
         // closes frame
@@ -435,16 +467,12 @@ f.add(footer);
     /**
      * 
      */
-    //private void c_Id;
+    // private void c_Id;
 
     /**
      * 
      */
-  //  private void c_Name;
-
-
-
-
+    // private void c_Name;
 
     /**
      * 
@@ -463,9 +491,9 @@ f.add(footer);
     /**
      * @param value
      */
-   // public void getAllMyWork(void value) {
-        // TODO implement here
-  //  }
+    // public void getAllMyWork(void value) {
+    // TODO implement here
+    // }
 
     /**
      * 
@@ -485,59 +513,55 @@ f.add(footer);
      * @param value
      */
     // public void makePayment(void value) {
-    //     // TODO implement here
+    // // TODO implement here
     // }
 
     /**
      * @return
      */
     // public void getC_Id() {
-    //     // TODO implement here
-    //     return null;
+    // // TODO implement here
+    // return null;
     // }
 
     /**
      * @return
      */
     // public void getC_Name() {
-    //     // TODO implement here
-    //     return null;
+    // // TODO implement here
+    // return null;
     // }
 
     /**
      * @param value
      */
     // public void setC_Name(void value) {
-    //     // TODO implement here
+    // // TODO implement here
     // }
 
     /**
      * 
      */
-    
 
     /**
      * 
      */
-    
-
-   
 
     @Override
     public void logout() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void viewWork(int value) {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**
      * @param value
      */
-   // public abstract void viewWork(void value);
+    // public abstract void viewWork(void value);
 
 }
