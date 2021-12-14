@@ -11,6 +11,7 @@ public class ConstructionManagment implements ActionListener {
         ConstructionManagment construction = new ConstructionManagment();    
     }
     JFrame f = new JFrame();//creating instance of JFrame
+    JButton clientLoginBtn,AdminLoginBtn, supervisorLoginBtn;
     public ConstructionManagment() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -51,9 +52,9 @@ public class ConstructionManagment implements ActionListener {
         loginThroughPanel.setBounds(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight()/4);
         loginThroughPanel.setAlignmentX(SwingConstants.CENTER);
         loginThroughPanel.setAlignmentY(SwingConstants.BOTTOM);
-        JButton clientLoginBtn = new JButton("Client ");
-        JButton AdminLoginBtn = new JButton("Admin");
-        JButton supervisorLoginBtn = new JButton("Supervisor");
+        clientLoginBtn = new JButton("Client ");
+        AdminLoginBtn = new JButton("Admin");
+        supervisorLoginBtn = new JButton("Supervisor");
         clientLoginBtn.setBackground(Color.decode("#40392f"));
         clientLoginBtn.setForeground(Color.decode("#ebc38a"));
         clientLoginBtn.setFocusPainted(false);
@@ -64,7 +65,7 @@ public class ConstructionManagment implements ActionListener {
         supervisorLoginBtn.setForeground(Color.decode("#ebc38a"));
         supervisorLoginBtn.setFocusPainted(false);
         supervisorLoginBtn.addActionListener(this);
-       
+
         
 
         clientLoginBtn.setBounds(30, 55,  65+((int)screenSize.getWidth())/4, 50);
@@ -97,9 +98,17 @@ public class ConstructionManagment implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e ) {
         // TODO Auto-generated method stub
-       
+       if (e.getSource()== AdminLoginBtn){
+
+       }
+       else if (e.getSource()== supervisorLoginBtn){
         Supervisor s1 = new Supervisor();
         // f.dispose();
+       }
+       else if (e.getSource()== clientLoginBtn){
+           
+       }
+        
                
     }
    
