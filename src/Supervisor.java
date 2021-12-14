@@ -14,15 +14,16 @@ public class Supervisor extends Login implements workDetails, ActionListener {
 
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-    /**
-     * Default constructor
-     */
+    
 
     JTextField usernameField;
     JPasswordField passwordField;
     Boolean loginStatus = false;
     JFrame loginFrame;
 
+    /**
+     * Default constructor
+     */
     public Supervisor() {
         login();
 

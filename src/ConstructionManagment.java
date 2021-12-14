@@ -58,9 +58,11 @@ public class ConstructionManagment implements ActionListener {
         clientLoginBtn.setBackground(Color.decode("#40392f"));
         clientLoginBtn.setForeground(Color.decode("#ebc38a"));
         clientLoginBtn.setFocusPainted(false);
+        clientLoginBtn.addActionListener(this);
         AdminLoginBtn.setBackground(Color.decode("#40392f"));
         AdminLoginBtn.setForeground(Color.decode("#ebc38a"));
         AdminLoginBtn.setFocusPainted(false);
+        AdminLoginBtn.addActionListener(this);
         supervisorLoginBtn.setBackground(Color.decode("#40392f"));
         supervisorLoginBtn.setForeground(Color.decode("#ebc38a"));
         supervisorLoginBtn.setFocusPainted(false);
@@ -106,7 +108,7 @@ public class ConstructionManagment implements ActionListener {
         // f.dispose();
        }
        else if (e.getSource()== clientLoginBtn){
-           
+           Client c1= new Client();
        }
         
                
