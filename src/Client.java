@@ -16,7 +16,7 @@ public class Client extends Login implements workDetails, ActionListener {
     JTextField usernameField;
     JTextField fName;
     JTextField lName;
-    JTextField mailIdField;
+    JTextField mailIdField, phoneField;
     JPasswordField passwordField;
     JPasswordField cnfPasswordField;
     Boolean loginStatus = false;
@@ -25,6 +25,8 @@ public class Client extends Login implements workDetails, ActionListener {
     JButton loginBtn, loginSubmitBtn, accCreateClnBtn, goTologinBtn;    
     JButton createClnBtn;
 
+    Config connection = new Config();
+    Connection con;
     /**
      * Default constructor
      */
@@ -34,7 +36,7 @@ public class Client extends Login implements workDetails, ActionListener {
 
     public void accountCreate(){
         createFrame = new JFrame();
-        createFrame.setLayout(new GridLayout(5, 0));
+        createFrame.setLayout(new GridLayout(5,0));
         createFrame.setSize((int) screenSize.getWidth() / 2, (int) (screenSize.getHeight()/2 ));
         createFrame.setLocation((int) screenSize.getWidth() / 4, (int) screenSize.getHeight() / 4);
 
@@ -64,10 +66,14 @@ public class Client extends Login implements workDetails, ActionListener {
         fName = new JTextField(15); // set length of the text
         lName = new  JTextField(15);
         mailIdField = new JTextField(15);
+        phoneField = new JTextField(10);
 
         // create label for password
         JLabel passLabel = new JLabel();
         passLabel.setText("<html>Password</html>"); // set label value for textField2
+
+        JLabel phoneLabel = new JLabel();
+        phoneLabel.setText("<html>Phone No: </html>"); 
 
         JLabel cnfPassLabel = new JLabel();
         cnfPassLabel.setText("<html>Confirm Password</html>");
@@ -87,20 +93,22 @@ public class Client extends Login implements workDetails, ActionListener {
         accCreateClnBtn.setFocusPainted(false);
 
 
-        JPanel namePanel = new JPanel();
+        JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         namePanel.add(fnameLabel);
         namePanel.add(fName);
         namePanel.add(lnameLabel);
         namePanel.add(lName);
                
-        JPanel usernamePanel = new JPanel();
+        JPanel usernamePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         usernamePanel.add(userLabel);
         usernamePanel.add(usernameField);
         usernamePanel.add(mailLabel);
         usernamePanel.add(mailIdField);
+        usernamePanel.add(phoneLabel);
+        usernamePanel.add(phoneField);
         // usernamePanel.setAlignmentX(alignmentX);
 
-        JPanel passwordPanel = new JPanel();
+        JPanel passwordPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         passwordPanel.add(passLabel);
         passwordPanel.add(passwordField);
         passwordPanel.add(cnfPassLabel);
@@ -205,7 +213,10 @@ public class Client extends Login implements workDetails, ActionListener {
         else if (e.getSource()== accCreateClnBtn){
             System.out.println("Please create an account for client");
             createFrame.dispose();
-            login();
+            con = connection.dbConnect();
+            // String sql = "insert into "
+
+
 
         }
         else if (e.getSource()== goTologinBtn){
@@ -293,14 +304,7 @@ public class Client extends Login implements workDetails, ActionListener {
         currentArea.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
         currentArea.setBackground(Color.decode("#f29105"));
 
-        JPanel currentWorkOptions = new JPanel(new GridLayout(2, 0, 5, 5));
-        // currentWorkOptions.setBackground(Color.decode("#d1c4b2"));
-        // currentWorkOptions.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        // currentWorkOptions.setBorder(BorderFactory.createLineBorder(Color.decode("#ebc38a")));
-        // JButton UpdateBtn = new JButton("Update Work Progress");
-        // UpdateBtn.setBackground(Color.decode("#a39887"));
-        // // UpdateBtn.setForeground(Color.decode("#0a0a0a"));
-        // UpdateBtn.setFocusPainted(false);
+        JPanel currentWorkOptions = new JPanel(new GridLayout(2, 0, 5, 5));    
 
         JButton materialBtn = new JButton("Used Materials");
         materialBtn.setBackground(Color.decode("#a39887"));
