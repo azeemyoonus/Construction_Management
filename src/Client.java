@@ -6,6 +6,7 @@ import java.sql.*;
 import javax.swing.BorderFactory;
 import javax.swing.border.EmptyBorder;
 import javax.swing.*;
+import java.util.UUID;
 
 /**
  * 
@@ -26,15 +27,18 @@ public class Client extends Login implements workDetails, ActionListener {
     JButton createClnBtn;
 
     Config connection = new Config();
-    Connection con;
+    Connection con= connection.dbConnect();
 
+    private String name;
+   
     /**
      * Default constructor
      */
     public Client() {
         login();
     }
-
+    // Password p = new Password(new BCryptPasswordEncoder().encode(encodedPw));
+   
     public void accountCreate() {
         createFrame = new JFrame();
         createFrame.setLayout(new GridLayout(5, 0));
@@ -66,6 +70,7 @@ public class Client extends Login implements workDetails, ActionListener {
         lName = new JTextField(15);
         mailIdField = new JTextField(35);
         phoneField = new JTextField(10);
+        usernameField = new JTextField(25);
 
         // create label for password
         JLabel passLabel = new JLabel();
@@ -194,21 +199,20 @@ public class Client extends Login implements workDetails, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == loginSubmitBtn) {
-            int supervisorId = 1;
-            con = connection.dbConnect();
-            String sql = "select * from logindetails where username=? and password =?";
+        if (e.getSource() == loginSubmitBtn) {                  
+            String sql = "select * from logindetails where username=? and pass_word =?";
             try {               
                 PreparedStatement prepareStatement = con.prepareStatement(sql);
                 prepareStatement.setString(1, loginUsernameField.getText());
-                prepareStatement.setString(2, loginPasswordField.getPassword().toString());
+                prepareStatement.setString(2, new String(loginPasswordField.getPassword()));
 
                 ResultSet rs = prepareStatement.executeQuery();
-                while (rs.next()) {
-                    System.out.println(rs.getString(1) + " " + rs.getString(2));
+                while (rs.next()) {                    
+                    System.out.println(rs.getObject(1) + " " + rs.getString(2));
+                    loadClientPanel(rs.getString(1));
+                    loginFrame.dispose();
                 }
-                loadClientPanel(supervisorId);
-                loginFrame.dispose();
+         
 
             } catch (SQLException e1) {
                 // TODO Auto-generated catch block
@@ -223,28 +227,25 @@ public class Client extends Login implements workDetails, ActionListener {
         } else if (e.getSource() == accCreateClnBtn) {
             System.out.println("Please create an account for client");
             createFrame.dispose();
-            con = connection.dbConnect();
-            String sql = "insert into client(fname,lname, mailid, phoneno) values(?,?,?,?); insert into logindetails (username, password) values (?,?)";
-            // String getCid ="select c_id from client (where )"
-            String sql1 = "insert into loginDetails values (? ,?,? ))";
+            con = connection.dbConnect();    
+
+            String sql = "insert into client values(?,?,?,?,?); insert into logindetails values (?,?,?)";           
             try {
-                // if (passwordField.getPassword() == cnfPasswordField.getPassword()){
+                UUID idOne = UUID.randomUUID();
+             
                 PreparedStatement prepareStatement = con.prepareStatement(sql);
-                prepareStatement.setString(1, fName.getText());
-                prepareStatement.setString(2, lName.getText());
-                prepareStatement.setString(3, mailIdField.getText());
-                prepareStatement.setString(4, phoneField.getText());
-                prepareStatement.setString(5, usernameField.getText());
-                prepareStatement.setString(6, passwordField.getPassword().toString());
+                prepareStatement.setObject(1,idOne);
+                prepareStatement.setString(2, fName.getText());
+                prepareStatement.setString(3, lName.getText());
+                prepareStatement.setString(4, mailIdField.getText());
+                prepareStatement.setString(5, phoneField.getText());
+                prepareStatement.setObject(6, idOne);
+                prepareStatement.setString(7, usernameField.getText());
+                prepareStatement.setString(8, new String(passwordField.getPassword()));
                 int updatedCount = prepareStatement.executeUpdate();
                 System.out.println(updatedCount + "  updated ");
 
-                PreparedStatement prepareStatement1 = con.prepareStatement(sql1);
-                // prepareStatement1
-                // }
-                // else{
-                // System.out.println("Password not match");
-                // }
+              
 
             } catch (SQLException e1) {
                 // TODO Auto-generated catch block
@@ -257,10 +258,31 @@ public class Client extends Login implements workDetails, ActionListener {
 
     }
 
-    public void loadClientPanel(int id) {
+    public void loadClientPanel(String stringID) {
 
-        // todo fetch loggined supervisor details from database
-
+        // todo fetch loggined supervisor details from database        
+        String sql = " select * from client where c_id=? ";
+        ResultSet rs;
+        String name ;
+        try {
+            
+         
+            PreparedStatement prepareStatement = con.prepareStatement(sql);
+            prepareStatement.setObject(1, UUID.fromString(stringID) );
+           
+            rs = prepareStatement.executeQuery();
+            while (rs.next()) {                    
+                // System.out.println(rs.getObject(1) + " " + rs.getString(2));
+                this.name =rs.getString(2)+ rs.getString(3);
+                // loadClientPanel(rs.getString(1));
+                // loginFrame.dispose();
+            }
+          
+        } catch (SQLException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+        
         JFrame f = new JFrame();// creating instance of JFrame
         f.getContentPane().invalidate();
         f.setSize((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
@@ -286,7 +308,7 @@ public class Client extends Login implements workDetails, ActionListener {
         JPanel welcomePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 20));
         welcomePanel.setBackground(Color.decode("#f0f0f0"));
 
-        JLabel welcomeLabel = new JLabel("<html> Welcome <font color='#ebc38a'> Client </font></html>");
+        JLabel welcomeLabel = new JLabel("<html> Welcome <font color='#ebc38a'>"+this.name +" </font></html>");
         welcomeLabel.setHorizontalAlignment(JLabel.LEFT);
         welcomeLabel.setBorder(new EmptyBorder(0, 20, 0, 0));
         welcomeLabel.setFont(new Font("SansSerif", Font.PLAIN, 35));
