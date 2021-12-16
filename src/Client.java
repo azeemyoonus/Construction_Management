@@ -13,7 +13,7 @@ import java.util.UUID;
  */
 public class Client extends Login implements workDetails, ActionListener {
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
+    JFrame f ;
     JTextField usernameField, loginUsernameField;
     JTextField fName;
     JTextField lName;
@@ -24,7 +24,7 @@ public class Client extends Login implements workDetails, ActionListener {
     JFrame createFrame;
     JFrame loginFrame;
     JButton loginBtn, loginSubmitBtn, accCreateClnBtn, goTologinBtn;
-    JButton createClnBtn;
+    JButton createClnBtn, reqAworkBtn, seeAllWorkBtn, logOutBtn, paymentBtn;
 
     Config connection = new Config();
     Connection con= connection.dbConnect();
@@ -255,6 +255,16 @@ public class Client extends Login implements workDetails, ActionListener {
             createFrame.dispose();
             login();
         }
+        else if (e.getSource()== reqAworkBtn){
+            System.out.println("req a work ");
+        }
+        else if (e.getSource()== seeAllWorkBtn){
+            System.out.println("See all your work");
+        }
+        else if (e.getSource()== logOutBtn){
+            System.out.println("Log Out Man");
+            f.dispose();
+        }
 
     }
 
@@ -265,8 +275,7 @@ public class Client extends Login implements workDetails, ActionListener {
         ResultSet rs;
         String name ;
         try {
-            
-         
+                     
             PreparedStatement prepareStatement = con.prepareStatement(sql);
             prepareStatement.setObject(1, UUID.fromString(stringID) );
            
@@ -283,7 +292,7 @@ public class Client extends Login implements workDetails, ActionListener {
             e1.printStackTrace();
         }
         
-        JFrame f = new JFrame();// creating instance of JFrame
+        f = new JFrame();// creating instance of JFrame
         f.getContentPane().invalidate();
         f.setSize((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
         f.setLocation((int) screenSize.getWidth() / 4, (int) screenSize.getHeight() / 4);
@@ -307,6 +316,30 @@ public class Client extends Login implements workDetails, ActionListener {
 
         JPanel welcomePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 20));
         welcomePanel.setBackground(Color.decode("#f0f0f0"));
+       
+        reqAworkBtn = new JButton("Request a Work");
+        reqAworkBtn.setBackground(Color.decode("#a39887"));
+        reqAworkBtn.setAlignmentX(100);        
+        reqAworkBtn.setFocusPainted(false);
+        reqAworkBtn.addActionListener(this);
+
+        seeAllWorkBtn = new JButton("See All Your work");
+        seeAllWorkBtn.setBackground(Color.decode("#a39887"));
+        // getReportBtn.setForeground(Color.decode("#ebc38a"));
+        seeAllWorkBtn.setFocusPainted(false);
+        seeAllWorkBtn.addActionListener(this);
+
+        logOutBtn = new JButton("Log Out");
+        logOutBtn.setBackground(Color.decode("#a39887"));
+        // getReportBtn.setForeground(Color.decode("#ebc38a"));
+        logOutBtn.setFocusPainted(false);
+        logOutBtn.addActionListener(this);
+
+        JPanel welcomBtnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 50, 20));
+
+        welcomBtnPanel.add(reqAworkBtn);
+        welcomBtnPanel.add(seeAllWorkBtn);
+        welcomBtnPanel.add(logOutBtn);
 
         JLabel welcomeLabel = new JLabel("<html> Welcome <font color='#ebc38a'>"+this.name +" </font></html>");
         welcomeLabel.setHorizontalAlignment(JLabel.LEFT);
@@ -376,6 +409,11 @@ public class Client extends Login implements workDetails, ActionListener {
         headerPanel.add(logoLabel);
         headerPanel.add(titleLabel);
         welcomePanel.add(welcomeLabel);
+
+       
+        welcomePanel.add(welcomBtnPanel);
+
+
         currentWorkPanel.add(currentWID);
         currentWorkPanel.add(currentWStart);
         currentWorkPanel.add(currentClientName);
