@@ -9,7 +9,7 @@ public class Site {
     /**
      * Default constructor
      */
-    public Site() {
+    public Site() {        
     }
 
     /**

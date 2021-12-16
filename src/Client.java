@@ -28,7 +28,7 @@ public class Client extends Login implements workDetails, ActionListener {
 
     Config connection = new Config();
     Connection con= connection.dbConnect();
-
+    public String StringId;
     private String name;
    
     /**
@@ -209,7 +209,8 @@ public class Client extends Login implements workDetails, ActionListener {
                 ResultSet rs = prepareStatement.executeQuery();
                 while (rs.next()) {                    
                     System.out.println(rs.getObject(1) + " " + rs.getString(2));
-                    loadClientPanel(rs.getString(1));
+                    this.StringId=rs.getString(1);
+                    loadClientPanel(StringId);
                     loginFrame.dispose();
                 }
          
@@ -257,6 +258,7 @@ public class Client extends Login implements workDetails, ActionListener {
         }
         else if (e.getSource()== reqAworkBtn){
             System.out.println("req a work ");
+            work w1 = new work(StringId);
         }
         else if (e.getSource()== seeAllWorkBtn){
             System.out.println("See all your work");
