@@ -1,12 +1,13 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.UUID;
 import java.awt.*;
 
 public class ConstructionManagment implements ActionListener {
 
     public static void main(String[] args) {
-
+        // UUID idOne = UUID.randomUUID();
         System.out.println("Welcome to Construction Management");
         ConstructionManagment construction = new ConstructionManagment();    
     }
@@ -101,7 +102,7 @@ public class ConstructionManagment implements ActionListener {
     public void actionPerformed(ActionEvent e ) {
         // TODO Auto-generated method stub
        if (e.getSource()== AdminLoginBtn){
-
+            Admin a1 = new Admin();
        }
        else if (e.getSource()== supervisorLoginBtn){
         Supervisor s1 = new Supervisor();
