@@ -7,8 +7,8 @@ import java.awt.*;
 public class ConstructionManagment implements ActionListener {
 
     public static void main(String[] args) {
-        // UUID idOne = UUID.randomUUID();
-        System.out.println("Welcome to Construction Management");
+        UUID idOne = UUID.randomUUID();
+        System.out.println("Welcome to Construction Management "+idOne);
         ConstructionManagment construction = new ConstructionManagment();    
     }
     JFrame f = new JFrame();//creating instance of JFrame

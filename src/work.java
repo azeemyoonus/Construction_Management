@@ -153,6 +153,8 @@ public String c_id;
     
       int updatedCount = prepareStatement.executeUpdate();
       System.out.println(updatedCount + " updated ");
+      this.reqWorkFrame.dispose();
+      
 
       } catch (SQLException e1) {
       // TODO Auto-generated catch block
