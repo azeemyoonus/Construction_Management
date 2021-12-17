@@ -6,8 +6,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.Month;
-import javax.swing.border.EmptyBorder;
 import javax.swing.*;
 
 public class work implements ActionListener, ItemListener {
@@ -30,6 +28,7 @@ public String c_id;
   /**
    * Default constructor
    */
+  
   public work(String c_id) {
 
     String sql = " select * from client where c_id=? ";

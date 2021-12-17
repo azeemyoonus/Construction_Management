@@ -273,8 +273,21 @@ public class Client extends Login implements workDetails, ActionListener {
             System.out.println("Log Out Man");
             f.dispose();
         }
+        else{
+            JButton button = (JButton) e.getSource();
+            String code = button.getName().substring(0, 3);
+            String idneed = button.getName().substring(3);
+            if (code.equals("ACW")) {
+
+            }
+            else if(code.equals("UMT")){
+                Materials m1 = new Materials(idneed);
+            
+            }
+        }
 
     }
+    
 
     public void loadClientPanel(String stringID) {
 
@@ -409,7 +422,7 @@ public class Client extends Login implements workDetails, ActionListener {
 
         // dummy.setBounds(0, 670, (int)screenSize.getWidth(), 60);
         allWorkPanel = new JPanel();
-        allWorkPanel.setSize(800, 00);
+        // allWorkPanel.setSize(800, 00);
         allWorkScrollPane = new JScrollPane(allWorkPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         allWorkPanel.setLayout(new  BoxLayout(allWorkPanel, BoxLayout.Y_AXIS));
@@ -420,7 +433,7 @@ public class Client extends Login implements workDetails, ActionListener {
         f.add(welcomePanel);
         f.add(forcurrentWorkLabel);
 
-        String sql2 = "select w_id, s_day, s_month, s_year, e_day, e_month, e_year, siteloc,fname, totalarea from officestaff natural join work natural join site where work.c_id=?";
+        String sql2 = "select w_id, s_day, s_month, s_year, e_day, e_month, e_year, siteloc,fname, totalarea, totalestimate, paymentstatus, s_id from officestaff natural join work natural join site where work.c_id=?";
         ResultSet workDetails;
         try {
             PreparedStatement prepareStatement1 = con.prepareStatement(sql2);
@@ -454,6 +467,17 @@ public class Client extends Login implements workDetails, ActionListener {
                 currentArea.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
                 currentArea.setBackground(Color.decode("#f29105"));
 
+                JLabel estimateArea = new JLabel("Estimate : " + workDetails.getString(11));
+                estimateArea.setBorder(new EmptyBorder(20, 20, 20, 20));
+                estimateArea.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
+                estimateArea.setBackground(Color.decode("#f29105"));
+
+                JLabel PaymentStatusArea = new JLabel("Paymenet Status: " + workDetails.getString(12));
+                PaymentStatusArea.setBorder(new EmptyBorder(20, 20, 20, 20));
+                PaymentStatusArea.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
+                PaymentStatusArea.setBackground(Color.decode("#f29105"));
+
+
                 currentWorkOptions = new JPanel(new GridLayout(2, 0, 5, 5));
                 currentWorkOptions.setBackground(Color.decode("#d1c4b2"));
 
@@ -461,6 +485,8 @@ public class Client extends Login implements workDetails, ActionListener {
                 materialBtn.setBackground(Color.decode("#a39887"));
                 // materialBtn.setForeground(Color.decode("#0a0a0a"));
                 materialBtn.setFocusPainted(false);
+                materialBtn.setName("UMT"+workDetails.getString(13));
+                materialBtn.addActionListener(this);
 
                 JButton paymentBtn = new JButton("Payment");
                 paymentBtn.setBackground(Color.decode("#a39887"));
@@ -476,7 +502,7 @@ public class Client extends Login implements workDetails, ActionListener {
                 currentWorkOptions.add(materialBtn);
                 currentWorkOptions.add(paymentBtn);
                 currentWorkOptions.add(contactClient);
-                currentWorkPanel = new JPanel(new GridLayout(2, 0));
+                currentWorkPanel = new JPanel(new GridLayout(3, 0));
                 currentWorkPanel.setBackground(Color.decode("#d1c4b2"));
                 currentWorkPanel.setBorder(BorderFactory.createLineBorder(Color.decode("#ebc38a")));
                 currentWorkPanel.add(currentWID);
@@ -484,6 +510,9 @@ public class Client extends Login implements workDetails, ActionListener {
                 currentWorkPanel.add(currentClientName);
                 currentWorkPanel.add(currentLocation);
                 currentWorkPanel.add(currentArea);
+                currentWorkPanel.add(estimateArea);
+                currentWorkPanel.add(PaymentStatusArea);
+
                 currentWorkPanel.add(currentWorkOptions);
                 // allWorkScrollBar.add(currentWorkPanel);
                 // allWorkScrollBar.add(currentWorkOptions);
@@ -506,15 +535,15 @@ public class Client extends Login implements workDetails, ActionListener {
         f.add(allWorkScrollPane);
         f.add(forPreviousWorkLabel);
 
-        allPreviousWorkPanel = new JPanel();
-        allPreviousWorkPanel.setSize(800, 00);
+        allPreviousWorkPanel = new JPanel(new GridLayout(3,0));
+        // allPreviousWorkPanel.setSize(800, 00);
         allPreviousWorkScrollPane = new JScrollPane(allPreviousWorkPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         allPreviousWorkPanel.setLayout(new  BoxLayout(allPreviousWorkPanel, BoxLayout.Y_AXIS));
         allPreviousWorkScrollPane.setBounds(0, 460, (int)screenSize.getWidth()-60, 200);
       
 
-        String sql3 = "select w_id, s_day, s_month, s_year, e_day, e_month, e_year, siteloc,fname, totalarea from officestaff natural join work natural join site where work.c_id=? and e_day is not null";
+        String sql3 = "select w_id, s_day, s_month, s_year, e_day, e_month, e_year, siteloc,fname, totalarea, totalestimate, paymentstatus from officestaff natural join work natural join site where work.c_id=? and e_day is not null";
         ResultSet previousWorkDetails;
         try {
             PreparedStatement prepareStatement1 = con.prepareStatement(sql3);
@@ -522,45 +551,52 @@ public class Client extends Login implements workDetails, ActionListener {
             previousWorkDetails = prepareStatement1.executeQuery();
 
             while (previousWorkDetails.next()) {
-                JPanel previousWorkPanel = new JPanel(new GridLayout(2, 0));
+                JPanel previousWorkPanel = new JPanel(new GridLayout(3, 0));
                 previousWorkPanel.setBackground(Color.decode("#d1c4b2"));
                 previousWorkPanel.setBorder(BorderFactory.createLineBorder(Color.decode("#ebc38a")));
         
-                JLabel previousWID = new JLabel("Work Id : " + "11111");
+                JLabel previousWID = new JLabel("Work Id : " + previousWorkDetails.getString(1));
                 previousWID.setBorder(new EmptyBorder(20, 20, 20, 20));
                 previousWID.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
                 previousWID.setBackground(Color.decode("#f29105"));
         
-                JLabel previousWStart = new JLabel("Work Started on : " + " 08-12-2020");
+                JLabel previousWStart = new JLabel("Work Started on : " +  previousWorkDetails.getString(2) + " / "
+                + previousWorkDetails.getString(3) + "/" + previousWorkDetails.getString(4));
                 previousWStart.setBorder(new EmptyBorder(20, 20, 20, 20));
                 previousWStart.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
                 previousWStart.setBackground(Color.decode("#f29105"));
         
-                JLabel previousWEnd = new JLabel("Work Ended on  : " + " 01-1-2021");
+                JLabel previousWEnd = new JLabel("Work Ended on  : " +  previousWorkDetails.getString(5) + " / "
+                + previousWorkDetails.getString(6) + "/" + previousWorkDetails.getString(7));
                 previousWEnd.setBorder(new EmptyBorder(20, 20, 20, 20));
                 previousWEnd.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
                 previousWEnd.setBackground(Color.decode("#f29105"));
         
-                JLabel previousClientName = new JLabel("Supervisor Name : " + " Ashwin");
+                JLabel previousClientName = new JLabel("Supervisor Name : " + previousWorkDetails.getString(9));
                 previousClientName.setBorder(new EmptyBorder(20, 20, 20, 20));
                 previousClientName.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
                 previousClientName.setBackground(Color.decode("#f29105"));
         
-                JLabel previousLocation = new JLabel("Location :" + " Kannur");
+                JLabel previousLocation = new JLabel("Location :" + previousWorkDetails.getString(8));
                 previousLocation.setBorder(new EmptyBorder(20, 20, 20, 20));
                 previousLocation.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
                 previousLocation.setBackground(Color.decode("#f29105"));
         
-                JLabel previousArea = new JLabel("Area (sq) :" + " 1345 sqft");
+                JLabel previousArea = new JLabel("Area (sq) :" +previousWorkDetails.getString(10));
                 previousArea.setBorder(new EmptyBorder(20, 20, 20, 20));
                 previousArea.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
                 previousArea.setBackground(Color.decode("#f29105"));
         
-                JLabel presviousEstimate = new JLabel("Estimate :" + " 45,60,000 RS");
+                JLabel presviousEstimate = new JLabel("Estimate :" + previousWorkDetails.getString(11));
                 presviousEstimate.setBorder(new EmptyBorder(20, 20, 20, 20));
                 presviousEstimate.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
                 presviousEstimate.setBackground(Color.decode("#f29105"));
         
+                JLabel paymentStatus = new JLabel("Payment Status :" +previousWorkDetails.getString(12) );
+                paymentStatus.setBorder(new EmptyBorder(20, 20, 20, 20));
+                paymentStatus.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
+                paymentStatus.setBackground(Color.decode("#f29105"));
+
                 JPanel previousWorkOptions = new JPanel(new GridLayout(2, 0, 5, 5));
                 previousWorkOptions.setBackground(Color.decode("#d1c4b2"));
                 previousWorkOptions.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -581,6 +617,7 @@ public class Client extends Login implements workDetails, ActionListener {
                 previousWorkPanel.add(previousLocation);
                 previousWorkPanel.add(previousArea);
                 previousWorkPanel.add(presviousEstimate);
+                previousWorkPanel.add(paymentStatus);
 
                 allPreviousWorkPanel.add(previousWorkPanel);
                 allPreviousWorkPanel.add(previousWorkOptions);

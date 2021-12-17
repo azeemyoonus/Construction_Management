@@ -14,19 +14,149 @@ public class Admin extends Login implements workDetails, ActionListener {
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     JFrame f;
     JTextField usernameField, loginUsernameField;
-    JButton loginSubmitBtn, goTologinBtn, addClntBtn;
+    JButton loginSubmitBtn, goTologinBtn, addmatBtn, addOfficeStaff, addStaffBtn;
     // ss
-    JTextField mailIdField, phoneField, fName, lName;
+    JTextField mailIdField, phoneField, fName, lName, mailArea, setUsenameField, setPassField;
     JPasswordField passwordField, loginPasswordField;
     JPasswordField cnfPasswordField;
     Boolean loginStatus = false;
     JFrame createFrame;
+
     JFrame loginFrame;
 
     Config connection = new Config();
     Connection con = connection.dbConnect();
     public String StringId;
     private String name;
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+        if (e.getSource() == loginSubmitBtn) {
+            System.out.println("calling ..");
+            loadAdminPanel("1");
+        } else if (e.getSource() == addmatBtn) {
+            JFrame addMatFrame = new JFrame();
+            addMatFrame.setLayout(new GridLayout(4, 0));
+            addMatFrame.setSize((int) screenSize.getWidth() / 2, (int) (screenSize.getHeight() + 550) / 3);
+            addMatFrame.setLocation((int) screenSize.getWidth() / 4, (int) screenSize.getHeight() / 4);
+
+            JTextField nameField = new JTextField();
+            JTextField costField = new JTextField();
+            JTextField sizeField = new JTextField();
+            JTextField companyField = new JTextField();
+
+            JLabel nameLabel = new JLabel("Name: ");
+
+            JPanel namePanel = new JPanel();
+            namePanel.add(nameLabel);
+            namePanel.add(nameField);
+
+            // addMatpanel.add(nameField);
+            // addMatpanel.add(new JLabel("cost: "));
+            // addMatpanel.add(costField);
+            // addMatpanel.add(new JLabel("size: "));
+            // addMatpanel.add(sizeField);
+            // addMatpanel.add(new JLabel("Comapany: "));
+            // addMatpanel.add(companyField);
+
+            // addMatFrame.add(addMatpanel);
+            addMatFrame.setVisible(true);
+
+        } else if (e.getSource() == addOfficeStaff) {
+            JFrame f = new JFrame();
+            f.setVisible(true);
+            f.setSize(700, 550);
+            f.setLayout(null);
+            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            f.setTitle("Add New Staff");
+
+            JLabel headerLabel = new JLabel("Staff Details");
+            headerLabel.setForeground(Color.black);
+            headerLabel.setFont(new Font("Serif", Font.BOLD, 20));
+            headerLabel.setBounds(200, 10, 400, 30);
+
+            JLabel fnameLabel = new JLabel("First name");
+            fnameLabel.setFont(new Font("Serif", Font.BOLD, 15));
+            fnameLabel.setBounds(80, 70, 200, 30);
+
+            JLabel lnameLabel = new JLabel("Last name");
+            fnameLabel.setFont(new Font("Serif", Font.BOLD, 15));
+            fnameLabel.setBounds(80, 110, 200, 30);
+
+            JLabel rollLabel = new JLabel("Roll");
+            rollLabel.setFont(new Font("Serif", Font.BOLD, 15));
+            rollLabel.setBounds(80, 155, 200, 30);
+
+            JLabel mailLabel = new JLabel("Email");
+            mailLabel.setFont(new Font("Serif", Font.BOLD, 15));
+            mailLabel.setBounds(80, 200, 200, 30);
+
+            JLabel pNum = new JLabel("Phone Number");
+            pNum.setFont(new Font("Serif", Font.BOLD, 15));
+            pNum.setBounds(80, 250, 200, 30);
+
+            JLabel setUname = new JLabel("Set Username");
+            setUname.setFont(new Font("Serif", Font.BOLD, 15));
+            setUname.setBounds(80, 300, 200, 30);
+
+            JLabel setPass = new JLabel("Set Password");
+            setPass.setFont(new Font("Serif", Font.BOLD, 15));
+            setPass.setBounds(80, 350, 200, 30);
+
+            String[] optionsToChoose = { "Admin", "Supervisor" };
+            JComboBox<String> rolesComboxBox = new JComboBox<>(optionsToChoose);
+            rolesComboxBox.setBackground(Color.white);
+
+            fName = new JTextField();
+            fName.setBounds(300, 70, 200, 30);
+
+            lName = new JTextField();
+            lName.setBounds(300, 110, 200, 30);
+
+            mailArea = new JTextField();
+            mailArea.setBounds(300, 210, 250, 30);
+
+            phoneField = new JTextField();
+            phoneField.setBounds(300, 260, 250, 30);
+
+            setUsenameField = new JTextField();
+            setUsenameField.setBounds(300, 310, 250, 30);
+
+            setPassField = new JTextField();
+            setPassField.setBounds(300, 360, 250, 30);
+
+            addStaffBtn = new JButton("ADD");
+            addStaffBtn.setBounds(200, 420, 150, 30);
+
+            rolesComboxBox.setBounds(300, 160, 200, 30);
+
+            f.add(headerLabel);
+            f.add(fnameLabel);
+            f.add(fName);
+
+            f.add(lnameLabel);
+            f.add(lName);
+
+            f.add(rollLabel);
+            f.add(rolesComboxBox);
+
+            f.add(mailLabel);
+            f.add(mailArea);
+
+            f.add(pNum);
+            f.add(phoneField);
+
+            f.add(setUname);
+            f.add(usernameField);
+            f.add(setPass);
+            f.add(passwordField);
+
+            f.add(addOfficeStaff);
+
+        }
+
+    }
 
     public Admin() {
         login();
@@ -210,18 +340,6 @@ public class Admin extends Login implements workDetails, ActionListener {
 
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
-        if (e.getSource() == loginSubmitBtn) {
-            System.out.println("calling ..");
-            loadAdminPanel("1");
-        } else if (e.getSource() == addClntBtn) {
-            addClient();
-        }
-
-    }
-
     /**
      * @param value
      */
@@ -300,17 +418,16 @@ public class Admin extends Login implements workDetails, ActionListener {
         clist.setFocusPainted(false);
         clist.addActionListener(this);
 
-        JButton addSup = new JButton("ADD SUPERVISOR");
-        addSup.setBackground(Color.decode("#a39887"));
-        addSup.setAlignmentX(100);
-        addSup.setFocusPainted(false);
-        addSup.addActionListener(this);
+        addOfficeStaff = new JButton("Ad Office Staff");
+        addOfficeStaff.setBackground(Color.decode("#a39887"));
+        addOfficeStaff.setAlignmentX(100);
+        addOfficeStaff.setFocusPainted(false);
+        addOfficeStaff.addActionListener(this);
 
-        addClntBtn = new JButton("ADD CLIENT");
-        addClntBtn.setBackground(Color.decode("#a39887"));
-        addClntBtn.setAlignmentX(100);
-        addClntBtn.setFocusPainted(false);
-        addClntBtn.addActionListener(this);
+        addmatBtn = new JButton("Add Materials");
+        addmatBtn.setBackground(Color.decode("#a39887"));
+        addmatBtn.setFocusPainted(false);
+        addmatBtn.addActionListener(this);
 
         // add all components
         f.add(headerPanel);
@@ -323,8 +440,8 @@ public class Admin extends Login implements workDetails, ActionListener {
         bodyButtons.add(pastWork);
         bodyButtons.add(supList);
         bodyButtons.add(clist);
-        bodyButtons.add(addSup);
-        bodyButtons.add(addClntBtn);
+        bodyButtons.add(addOfficeStaff);
+        bodyButtons.add(addmatBtn);
     }
 
     @Override
