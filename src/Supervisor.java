@@ -46,7 +46,7 @@ public class Supervisor extends Login implements workDetails, ActionListener {
         try {
             PreparedStatement prepareStatement = con.prepareStatement(sql);
             prepareStatement.setObject(1, UUID.fromString(id));
-            rs = prepareStatement.executeQuery();
+            rs = prepareStatement.executeQuery();          
             while (rs.next()) {
                 System.out.println(rs.getObject(1) + " " + rs.getString(2));
                 this.name = rs.getString(2) + " " + rs.getString(3);
@@ -141,6 +141,9 @@ public class Supervisor extends Login implements workDetails, ActionListener {
         // bar.setPreferredSize(new Dimension(40, 0));
         allAcceptWorkPanel.setLayout(new BoxLayout(allAcceptWorkPanel, BoxLayout.Y_AXIS));
         allAcceptedWorkPane.setBounds(0, 200, (int) screenSize.getWidth() - 60, 200);
+        headerPanel.add(logoLabel);
+        headerPanel.add(titleLabel);
+        welcomePanel.add(welcomeLabel);
 
         f.add(headerPanel);
         f.add(welcomePanel);
@@ -328,9 +331,7 @@ public class Supervisor extends Login implements workDetails, ActionListener {
 
                 currentWorkOptions.add(acceptWorkBtn);
 
-                headerPanel.add(logoLabel);
-                headerPanel.add(titleLabel);
-                welcomePanel.add(welcomeLabel);
+               
                 currentWorkPanel.add(currentWID);
                 currentWorkPanel.add(currentWStart);
                 currentWorkPanel.add(currentClientName);
@@ -638,7 +639,7 @@ public class Supervisor extends Login implements workDetails, ActionListener {
     }
 
     @Override
-    public void viewWork(int value) {
+    public void viewWork(String w_id) {
         // TODO Auto-generated method stub
 
     }

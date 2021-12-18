@@ -271,7 +271,7 @@ public class Client extends Login implements workDetails, ActionListener {
 
         } else if (e.getSource() == logOutBtn) {
             System.out.println("Log Out Man");
-            f.dispose();
+            logout();
         }
         else{
             JButton button = (JButton) e.getSource();
@@ -721,11 +721,12 @@ public class Client extends Login implements workDetails, ActionListener {
     @Override
     public void logout() {
         // TODO Auto-generated method stub
+        f.dispose();
 
     }
 
     @Override
-    public void viewWork(int value) {
+    public void viewWork(String w_id) {
         // TODO Auto-generated method stub
 
     }
