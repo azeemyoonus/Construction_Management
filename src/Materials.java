@@ -17,13 +17,15 @@ public class Materials implements ActionListener, ItemListener {
 
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-    JFrame addMaterials, showMaterialsFrame;
-    JButton addmatBtn;
-    JTextField matQtyArea;
-    JComboBox materalsBox;
+    JFrame addMaterials, showMaterialsFrame, addMatToComFrame;
+    JButton addmatBtn, addMatsubBtn, addMatToComBtn;
+    JTextField matQtyArea, estimateArea, mNameField, mCostField, mSizeField, mCompanyField;
+    JLabel workIdArea;
+    JComboBox materalsBox, paymentStatusComboBox;
     JPanel allMaterialPanel;
     JScrollPane allMaterialScrollPane;
     ArrayList<String> materialNames = new ArrayList<String>();
+    JComboBox<String> workStatusComboBox;
     Config connection = new Config();
     Connection con = connection.dbConnect();
     String w_id, siteId;
@@ -43,17 +45,107 @@ public class Materials implements ActionListener, ItemListener {
         showMaterials();
     }
 
+    public Materials() {
+
+    }
+
+    public void addMaterialstoCompany() {
+
+        addMatToComFrame = new JFrame();
+        addMatToComFrame.getContentPane().invalidate();
+        addMatToComFrame.setSize(700, 350);
+        addMatToComFrame.setLocation((int) screenSize.getWidth() / 4, (int) screenSize.getHeight() / 4);        
+        addMatToComFrame.setLayout(null);
+
+        JPanel forheaderLabel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        forheaderLabel.setBackground(Color.decode("#40392f"));
+        forheaderLabel.setBorder(BorderFactory.createLineBorder(Color.decode("#ebc38a")));
+        forheaderLabel.setBounds(0, 0, (int) screenSize.getWidth(), 80);
+
+        JLabel headerLabel = new JLabel("Material Details");
+        headerLabel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        headerLabel.setHorizontalAlignment(JLabel.LEFT);
+        headerLabel.setForeground(Color.decode("#ebc38a"));
+        headerLabel.setFont(new Font("SansSerif", Font.PLAIN, 30));
+
+        forheaderLabel.add(headerLabel);
+
+
+
+        
+
+        JLabel mNameLabel = new JLabel("Material name: ");
+        // fnameLabel.setForeground(Color.decode("#ebc38a"));
+        mNameLabel.setFont(new Font("SansSerif", Font.PLAIN, 25));
+        mNameLabel.setBounds(80, 80, 200, 30);
+
+        JLabel mCostLabel = new JLabel("Cost : ");
+        // lnameLabel.setForeground(Color.decode("#ebc38a"));
+        mCostLabel.setFont(new Font("SansSerif", Font.PLAIN, 25));
+        mCostLabel.setBounds(80, 120, 200, 30);
+
+        JLabel mSizeLabel = new JLabel("Size : ");
+        // rollLabel.setForeground(Color.decode("#ebc38a"));
+        mSizeLabel.setFont(new Font("SansSerif", Font.PLAIN, 25));
+        mSizeLabel.setBounds(80, 165, 200, 30);
+
+        JLabel mCompanyLabel = new JLabel("Company : ");
+        // mailLabel.setForeground(Color.decode("#ebc38a"));
+        mCompanyLabel.setFont(new Font("SansSerif", Font.PLAIN, 25));
+        mCompanyLabel.setBounds(80, 210, 200, 30);
+
+        mNameField = new JTextField();
+        mNameField.setBounds(300, 85, 200, 30);
+
+        mCostField = new JTextField();
+        mCostField.setBounds(300, 125, 200, 30);
+
+        mSizeField = new JTextField();
+        mSizeField.setBounds(300, 170, 200, 30);
+
+        mCompanyField = new JTextField();
+        mCompanyField.setBounds(300, 210, 200, 30);
+
+        addMatToComBtn = new JButton("ADD");
+        addMatToComBtn.setBackground(Color.decode("#a39887"));
+        // addStaffBtn.setAlignmentX(300);
+        addMatToComBtn.setFocusPainted(false);
+        addMatToComBtn.addActionListener(this);
+        addMatToComBtn.setBounds(250, 260, 150, 30);
+
+        addMatToComFrame.getContentPane().setBackground(Color.decode("#f0f0f0"));
+
+        addMatToComFrame.add(forheaderLabel);
+
+        addMatToComFrame.add(mNameLabel);
+        addMatToComFrame.add(mNameField);
+
+        addMatToComFrame.add(mCostLabel);
+        addMatToComFrame.add(mCostField);
+
+        addMatToComFrame.add(mSizeLabel);
+        addMatToComFrame.add(mSizeField);
+
+        addMatToComFrame.add(mCompanyLabel);
+        addMatToComFrame.add(mCompanyField);
+
+        addMatToComFrame.add(addMatToComBtn);
+
+        addMatToComFrame.setVisible(true);
+
+    }
+
     void showMaterials() {
 
         showMaterialsFrame = new JFrame();
         showMaterialsFrame.setLayout(null);
-        showMaterialsFrame.setSize((int) screenSize.getWidth() , 300);
+        showMaterialsFrame.setSize((int) screenSize.getWidth(), 300);
         showMaterialsFrame.setLocation((int) screenSize.getWidth() / 4, (int) screenSize.getHeight() / 4);
 
         JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         titlePanel.setBackground(Color.decode("#40392f"));
         titlePanel.setBorder(BorderFactory.createLineBorder(Color.decode("#ebc38a")));
-        titlePanel.setBounds(0,0,(int) screenSize.getWidth(),60);
+        titlePanel.setBounds(0, 0, (int) screenSize.getWidth(), 60);
 
         JLabel usedMaterialsLabel = new JLabel("Used Materials");
         usedMaterialsLabel.setBorder(new EmptyBorder(20, 20, 10, 10));
@@ -123,7 +215,7 @@ public class Materials implements ActionListener, ItemListener {
                 materialPanel.add(mQty);
 
                 allMaterialPanel.add(materialPanel);
-                
+
             }
 
         } catch (SQLException e1) {
@@ -217,6 +309,45 @@ public class Materials implements ActionListener, ItemListener {
                 int count = prepareStatement.executeUpdate();
                 System.out.println(count + " updated");
 
+            } catch (SQLException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+
+        } else if (e.getSource() == addMatsubBtn) {
+            String sql3 = "insert into  materialspec values (?,?,?,?,? )";
+
+            try {
+                UUID m_id = UUID.randomUUID();
+                PreparedStatement prepareStatement = con.prepareStatement(sql3);
+                prepareStatement.setObject(1, m_id);
+                prepareStatement.setObject(2, UUID.fromString(siteId));
+                prepareStatement.setInt(3, Integer.parseInt(matQtyArea.getText()));
+
+                int count = prepareStatement.executeUpdate();
+                System.out.println(count + " updated");
+
+            } catch (SQLException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+
+        }
+        else if (e.getSource()==addMatToComBtn){
+            String sql1 = "insert into materialspec values(?,?,?,?,?)";
+            UUID id = UUID.randomUUID();
+            try{
+                PreparedStatement preparedStatement1 =con.prepareStatement(sql1);
+                preparedStatement1.setObject(1, id);
+                preparedStatement1.setString(2, mNameField.getText());
+                preparedStatement1.setInt(3, Integer.parseInt(mCostField.getText()));
+                preparedStatement1.setString(4, mSizeField.getText());
+                preparedStatement1.setString(5, mCompanyField.getText());
+              int count = preparedStatement1.executeUpdate();
+              System.out.println(count+" row updated");
+                if (count==1){
+                    addMatToComFrame.dispose();
+                }
             } catch (SQLException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();

@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import javax.swing.BorderFactory;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.*;
 
@@ -14,18 +15,20 @@ public class Supervisor extends Login implements workDetails, ActionListener {
 
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-    JTextField usernameField;
+    JTextField usernameField, estimateArea;
     JPasswordField passwordField;
     Boolean loginStatus = false;
-    JFrame loginFrame, f;
-    JButton submitBtn;
-    JPanel allAcceptWorkPanel, allAvailableWorkPanel;
-    JScrollPane allAvailableWorkScrollPane, allAcceptedWorkPane;
-
+    JFrame loginFrame, f, viewWorkFrame;
+    JButton submitBtn, updateWorkBtn, refreshBtn, logOutBtn;
+    JLabel workIdArea;
+    JComboBox<String> paymentStatusComboBox, workStatusComboBox;
+    JPanel allAcceptWorkPanel, allAvailableWorkPanel, viewWorkPanel, formaterialLabel, allMaterialPanel;
+    JScrollPane allAvailableWorkScrollPane, allAcceptedWorkPane, allMaterialScrollPane;
+    work w1 = new work(null);
     Config connection = new Config();
     Connection con = connection.dbConnect();
-
-    public String StringId;
+    // w1= new work(null);
+    public String StringId, site_id, supervisor_id;
 
     private String name;
 
@@ -38,7 +41,7 @@ public class Supervisor extends Login implements workDetails, ActionListener {
     }
 
     public void loadSupervisorPanel(String id) {
-
+        this.supervisor_id = id;
         // todo fetch loggined supervisor details from database
 
         String sql = " select * from officestaff where id=? ";
@@ -46,7 +49,7 @@ public class Supervisor extends Login implements workDetails, ActionListener {
         try {
             PreparedStatement prepareStatement = con.prepareStatement(sql);
             prepareStatement.setObject(1, UUID.fromString(id));
-            rs = prepareStatement.executeQuery();          
+            rs = prepareStatement.executeQuery();
             while (rs.next()) {
                 System.out.println(rs.getObject(1) + " " + rs.getString(2));
                 this.name = rs.getString(2) + " " + rs.getString(3);
@@ -90,6 +93,18 @@ public class Supervisor extends Login implements workDetails, ActionListener {
         welcomeLabel.setBorder(new EmptyBorder(0, 20, 0, 0));
         welcomeLabel.setFont(new Font("SansSerif", Font.PLAIN, 35));
         // welcomeLabel.setForeground(Color.decode("#a38f72"));
+        refreshBtn = new JButton("Refresh");
+        refreshBtn.setBackground(Color.decode("#a39887"));
+        // getReportBtn.setForeground(Color.decode("#ebc38a"));
+        refreshBtn.setFocusPainted(false);
+        refreshBtn.addActionListener(this);
+
+        logOutBtn = new JButton("Log Out");
+        logOutBtn.setBackground(Color.decode("#a39887"));
+        // getReportBtn.setForeground(Color.decode("#ebc38a"));
+        logOutBtn.setFocusPainted(false);
+        logOutBtn.addActionListener(this);
+        
 
         JPanel forcurrentWorkLabel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         forcurrentWorkLabel.setBackground(Color.decode("#40392f"));
@@ -144,12 +159,14 @@ public class Supervisor extends Login implements workDetails, ActionListener {
         headerPanel.add(logoLabel);
         headerPanel.add(titleLabel);
         welcomePanel.add(welcomeLabel);
+        welcomePanel.add(refreshBtn);
+        welcomePanel.add(logOutBtn);
 
         f.add(headerPanel);
         f.add(welcomePanel);
         f.add(forcurrentWorkLabel);
 
-        String sql2 = "select w_id,  s_day, s_month, s_year, e_day, e_month, e_year, siteloc,fname||' '||lname, totalarea, totalestimate, paymentstatus, s_id from client natural join work natural join site where work.o_id=?";
+        String sql2 = "select w_id,  s_day, s_month, s_year, e_day, e_month, e_year, siteloc,fname||' '||lname, totalarea, totalestimate, paymentstatus, s_id from client natural join work natural join site where work.o_id=?  and client.c_id=work.c_id";
         ResultSet acceptWorkDetails;
         try {
             PreparedStatement prepareStatement1 = con.prepareStatement(sql2);
@@ -221,6 +238,7 @@ public class Supervisor extends Login implements workDetails, ActionListener {
                 // materialBtn.setForeground(Color.decode("#0a0a0a"));
                 getReportBtn.setFocusPainted(false);
                 getReportBtn.setName(acceptWorkDetails.getString(1));
+                getReportBtn.setName("GTR" + acceptWorkDetails.getString(1));
                 getReportBtn.addActionListener(this);
 
                 JButton contactClientBtn = new JButton("Contact Client");
@@ -331,7 +349,6 @@ public class Supervisor extends Login implements workDetails, ActionListener {
 
                 currentWorkOptions.add(acceptWorkBtn);
 
-               
                 currentWorkPanel.add(currentWID);
                 currentWorkPanel.add(currentWStart);
                 currentWorkPanel.add(currentClientName);
@@ -382,6 +399,12 @@ public class Supervisor extends Login implements workDetails, ActionListener {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
+        } else if (e.getSource() == logOutBtn) {
+            logout();
+        } else if (e.getSource() == refreshBtn) {
+            this.f.dispose();
+            loadSupervisorPanel(this.supervisor_id);
+
         }
 
         else {
@@ -415,87 +438,8 @@ public class Supervisor extends Login implements workDetails, ActionListener {
                 }
             } else if (code.equals("UWP")) {
                 System.out.println("upadte work progress ");
-                JFrame updateWorkFrame;
-                // JLabel staffDetailsLabel, fNameLabel, lNameLabel, rollLabel, emailLabel, phoneLabel, usernameLabel,
-                //         passwordLabel;
-                // JTextField tf1, tf2, tf5, tf6, tf7, tf8;
-                // JButton addBtn;
-                // updateWorkFrame.setVisible(true);
-                // updateWorkFrame.setSize(700, 550);
-                // updateWorkFrame.setLayout(null);
-                // updateWorkFrame.setTitle("Add New Staff");
-                // staffDetailsLabel = new JLabel("Staff Details");
-                // staffDetailsLabel.setForeground(Color.black);
-                // staffDetailsLabel.setFont(new Font("Serif", Font.BOLD, 20));
 
-                // fNameLabel = new JLabel("First name");
-                // fNameLabel.setFont(new Font("Serif", Font.BOLD, 15));
-                // lNameLabel = new JLabel("Last name");
-                // lNameLabel.setFont(new Font("Serif", Font.BOLD, 15));
-
-                // rollLabel = new JLabel("Roll");
-                // rollLabel.setFont(new Font("Serif", Font.BOLD, 15));
-                // emailLabel = new JLabel("Email");
-                // emailLabel.setFont(new Font("Serif", Font.BOLD, 15));
-
-                // phoneLabel = new JLabel("Phone Number");
-                // phoneLabel.setFont(new Font("Serif", Font.BOLD, 15));
-
-                // usernameLabel = new JLabel("Set Username");
-                // usernameLabel.setFont(new Font("Serif", Font.BOLD, 15));
-
-                // passwordLabel = new JLabel("Set Password");
-                // passwordLabel.setFont(new Font("Serif", Font.BOLD, 15));
-
-                // String[] optionsToChoose = { "Admin", "Supervisor" };
-                // JComboBox<String> jComboBox = new JComboBox<>(optionsToChoose);
-                // jComboBox.setBackground(Color.white);
-
-                // tf1 = new JTextField();
-                // tf2 = new JTextField();
-                // tf5 = new JTextField();
-                // tf6 = new JTextField();
-                // tf7 = new JTextField();
-                // tf8 = new JTextField();
-
-                // addBtn = new JButton("ADD");
-
-                // staffDetailsLabel.setBounds(200, 10, 400, 30);
-                // fNameLabel.setBounds(80, 70, 200, 30);
-                // lNameLabel.setBounds(80, 110, 200, 30);
-                // rollLabel.setBounds(80, 155, 200, 30);
-                // emailLabel.setBounds(80, 200, 200, 30);
-                // phoneLabel.setBounds(80, 250, 200, 30);
-                // usernameLabel.setBounds(80, 300, 200, 30);
-                // passwordLabel.setBounds(80, 350, 200, 30);
-
-                // tf1.setBounds(300, 70, 200, 30);
-                // tf2.setBounds(300, 110, 200, 30);
-                // jComboBox.setBounds(300, 160, 200, 30);
-                // tf5.setBounds(300, 210, 250, 30);
-                // tf6.setBounds(300, 260, 250, 30);
-                // tf7.setBounds(300, 310, 250, 30);
-                // tf8.setBounds(300, 360, 250, 30);
-                // addBtn.setBounds(200, 420, 150, 30);
-
-                // updateWorkFrame.add(staffDetailsLabel);
-                // updateWorkFrame.add(fNameLabel);
-                // updateWorkFrame.add(tf1);
-                // updateWorkFrame.add(lNameLabel);
-                // updateWorkFrame.add(tf2);
-                // updateWorkFrame.add(rollLabel);
-                // updateWorkFrame.add(emailLabel);
-                // updateWorkFrame.add(jComboBox);
-                // updateWorkFrame.add(emailLabel);
-                // updateWorkFrame.add(tf5);
-                // updateWorkFrame.add(phoneLabel);
-                // updateWorkFrame.add(tf6);
-                // updateWorkFrame.add(usernameLabel);
-                // updateWorkFrame.add(tf7);
-                // updateWorkFrame.add(l8);
-                // updateWorkFrame.add(tf8);
-
-                // updateWorkFrame.add(addBtn);
+                w1.updateWorkProgess(idneed);
 
             } else if (code.equals("UMT")) {
                 System.out.println("used Materials  ");
@@ -507,6 +451,7 @@ public class Supervisor extends Login implements workDetails, ActionListener {
 
             } else if (code.equals("GTR")) {
                 System.out.println("GET report ");
+                viewWork(idneed);
 
             }
 
@@ -635,13 +580,183 @@ public class Supervisor extends Login implements workDetails, ActionListener {
     @Override
     public void logout() {
         // TODO Auto-generated method stub
-
+        f.dispose();
     }
 
     @Override
     public void viewWork(String w_id) {
         // TODO Auto-generated method stub
+        viewWorkFrame = new JFrame();
+        viewWorkFrame.setLayout(null);
+        viewWorkFrame.setSize((int) screenSize.getWidth(), 540);
+        viewWorkFrame.setLocation((int) screenSize.getWidth() / 4, (int) screenSize.getHeight() / 4);
 
+        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        titlePanel.setBackground(Color.decode("#40392f"));
+        titlePanel.setBorder(BorderFactory.createLineBorder(Color.decode("#ebc38a")));
+        titlePanel.setBounds(0, 0, (int) screenSize.getWidth(), 60);
+
+        JLabel viewWorkLabel = new JLabel("View Work");
+        viewWorkLabel.setBorder(new EmptyBorder(20, 20, 10, 10));
+        viewWorkLabel.setHorizontalAlignment(JLabel.LEFT);
+        viewWorkLabel.setForeground(Color.decode("#ebc38a"));
+
+        titlePanel.add(viewWorkLabel);
+
+        Border blackline = BorderFactory.createLineBorder(Color.black);
+
+        String sql3 = "select w_id, s_day, s_month, s_year, e_day, e_month, e_year,fname||' '||lname, siteloc,totalarea, totalestimate, paymentstatus,s_id from client natural join work natural join site  where work.w_id=?";
+        String sql4 = "select  m_id, m_name, m_cost, m_size, m_company, m_quantity from materials natural join materialspec where materials.site_id =?  ";
+
+        ResultSet workDetails, materialDetails;
+        try {
+            PreparedStatement prepareStatement1 = con.prepareStatement(sql3);
+            prepareStatement1.setObject(1, UUID.fromString(w_id));
+            workDetails = prepareStatement1.executeQuery();
+
+            while (workDetails.next()) {
+                this.site_id = workDetails.getString(13);
+                viewWorkPanel = new JPanel(new GridLayout(3, 0));
+                viewWorkPanel.setBounds(0, 60, (int) screenSize.getWidth(), 200);
+
+                viewWorkPanel.setBackground(Color.decode("#d1c4b2"));
+                viewWorkPanel.setBorder(BorderFactory.createLineBorder(Color.decode("#ebc38a")));
+
+                JLabel currentWID = new JLabel("Work Id : " + workDetails.getString(1));
+                currentWID.setBorder(new EmptyBorder(20, 20, 20, 20));
+                currentWID.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
+                currentWID.setBackground(Color.decode("#f29105"));
+
+                JLabel currentWStart = new JLabel("Work Started : " + workDetails.getString(2) + " / "
+                        + workDetails.getString(3) + "/" + workDetails.getString(4));
+                currentWStart.setBorder(new EmptyBorder(20, 20, 20, 20));
+                currentWStart.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
+                currentWStart.setBackground(Color.decode("#f29105"));
+
+                JLabel currentClientName = new JLabel("Client Name : " + workDetails.getString(8));
+                currentClientName.setBorder(new EmptyBorder(20, 20, 20, 20));
+                currentClientName.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
+                currentClientName.setBackground(Color.decode("#f29105"));
+
+                JLabel currentLocation = new JLabel("Location : " + workDetails.getString(9));
+                currentLocation.setBorder(new EmptyBorder(20, 20, 20, 20));
+                currentLocation.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
+                currentLocation.setBackground(Color.decode("#f29105"));
+
+                JLabel currentArea = new JLabel("Area (Sq): " + workDetails.getString(10));
+                currentArea.setBorder(new EmptyBorder(20, 20, 20, 20));
+                currentArea.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
+                currentArea.setBackground(Color.decode("#f29105"));
+
+                JLabel estimateArea = new JLabel("Estimate :" + workDetails.getString(11));
+                estimateArea.setBorder(new EmptyBorder(20, 20, 20, 20));
+                estimateArea.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
+                estimateArea.setBackground(Color.decode("#f29105"));
+
+                JLabel paymentstatus = new JLabel("Payment Status: " + workDetails.getString(12));
+                paymentstatus.setBorder(new EmptyBorder(20, 20, 20, 20));
+                paymentstatus.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
+                paymentstatus.setBackground(Color.decode("#f29105"));
+
+                JPanel currentWorkOptions = new JPanel(new GridLayout(2, 0, 5, 5));
+                currentWorkOptions.setBackground(Color.decode("#d1c4b2"));
+                currentWorkOptions.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+                currentWorkOptions.setBorder(BorderFactory.createLineBorder(Color.decode("#ebc38a")));
+
+                formaterialLabel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                formaterialLabel.setBackground(Color.decode("#40392f"));
+                formaterialLabel.setBorder(BorderFactory.createLineBorder(Color.decode("#ebc38a")));
+                formaterialLabel.setBounds(0, 260, (int) screenSize.getWidth(), 60);
+
+                JLabel usedMaterialsLabel = new JLabel("Used Materials");
+                usedMaterialsLabel.setBorder(new EmptyBorder(20, 20, 10, 10));
+                usedMaterialsLabel.setHorizontalAlignment(JLabel.LEFT);
+                usedMaterialsLabel.setForeground(Color.decode("#ebc38a"));
+
+                formaterialLabel.add(usedMaterialsLabel);
+
+                allMaterialPanel = new JPanel();
+                // allWorkPanel.setSize(800, 00);
+                allMaterialScrollPane = new JScrollPane(allMaterialPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                        JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                allMaterialPanel.setLayout(new BoxLayout(allMaterialPanel, BoxLayout.Y_AXIS));
+                allMaterialScrollPane.setBounds(0, 320, (int) screenSize.getWidth() - 60, 200);
+
+                PreparedStatement prepareStatement = con.prepareStatement(sql4);
+                prepareStatement.setObject(1, UUID.fromString(this.site_id));
+                System.out.println("site ID: " + this.site_id);
+                materialDetails = prepareStatement.executeQuery();
+                while (materialDetails.next()) {
+                    JPanel materialPanel = new JPanel(new GridLayout(2, 0));
+                    materialPanel.setBackground(Color.decode("#d1c4b2"));
+                    materialPanel.setBorder(blackline);
+                    JLabel matID = new JLabel("Material Id : " + materialDetails.getString(1));
+                    matID.setBorder(new EmptyBorder(20, 20, 20, 20));
+                    matID.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
+                    matID.setBackground(Color.decode("#f29105"));
+
+                    JLabel mName = new JLabel("Material Name : " + materialDetails.getString(2));
+                    mName.setBorder(new EmptyBorder(20, 20, 20, 20));
+                    mName.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
+                    mName.setBackground(Color.decode("#f29105"));
+
+                    JLabel mCost = new JLabel("Cost : " + materialDetails.getString(3));
+                    mCost.setBorder(new EmptyBorder(20, 20, 20, 20));
+                    mCost.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
+                    mCost.setBackground(Color.decode("#f29105"));
+
+                    JLabel mSize = new JLabel("Size : " + materialDetails.getString(4));
+                    mSize.setBorder(new EmptyBorder(20, 20, 20, 20));
+                    mSize.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
+                    mSize.setBackground(Color.decode("#f29105"));
+
+                    JLabel mCompany = new JLabel("Company : " + materialDetails.getString(5));
+                    mCompany.setBorder(new EmptyBorder(20, 20, 20, 20));
+                    mCompany.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
+                    mCompany.setBackground(Color.decode("#f29105"));
+
+                    JLabel mQty = new JLabel("Quantity : " + materialDetails.getString(6));
+                    mQty.setBorder(new EmptyBorder(20, 20, 20, 20));
+                    mQty.setAlignmentY(JTextArea.BOTTOM_ALIGNMENT);
+                    mQty.setBackground(Color.decode("#f29105"));
+
+                    materialPanel.add(matID);
+                    materialPanel.add(mName);
+                    materialPanel.add(mCost);
+                    materialPanel.add(mSize);
+                    materialPanel.add(mCompany);
+                    materialPanel.add(mQty);
+
+                    allMaterialPanel.add(materialPanel);
+                }
+                // }
+                // catch (SQLException e1) {
+                // // TODO Auto-generated catch block
+                // e1.printStackTrace();
+                // }
+
+                viewWorkPanel.add(currentWID);
+                viewWorkPanel.add(currentWStart);
+                viewWorkPanel.add(currentClientName);
+                viewWorkPanel.add(currentLocation);
+                viewWorkPanel.add(currentArea);
+                viewWorkPanel.add(estimateArea);
+                viewWorkPanel.add(paymentstatus);
+
+                // allAvailableWorkPanel.add(currentWorkPanel);
+                // allAvailableWorkPanel.add(currentWorkOptions);
+
+            }
+
+        } catch (SQLException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+        viewWorkFrame.add(titlePanel);
+        viewWorkFrame.add(viewWorkPanel);
+        viewWorkFrame.add(formaterialLabel);
+        viewWorkFrame.add(allMaterialScrollPane);
+        viewWorkFrame.setVisible(true);
     }
 
 }
