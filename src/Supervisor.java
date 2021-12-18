@@ -28,7 +28,7 @@ public class Supervisor extends Login implements workDetails, ActionListener {
     Config connection = new Config();
     Connection con = connection.dbConnect();
     // w1= new work(null);
-    public String StringId, site_id, supervisor_id;
+    public String StringId, site_id, supervisor_id, clientName, clientMail, clientPhone;
 
     private String name;
 
@@ -42,7 +42,7 @@ public class Supervisor extends Login implements workDetails, ActionListener {
 
     public void loadSupervisorPanel(String id) {
         this.supervisor_id = id;
-        // todo fetch loggined supervisor details from database
+    
 
         String sql = " select * from officestaff where id=? ";
         ResultSet rs;
@@ -84,7 +84,7 @@ public class Supervisor extends Login implements workDetails, ActionListener {
         JButton loginBtn = new JButton("Login");
         loginBtn.setHorizontalAlignment(SwingConstants.RIGHT);
 
-        JPanel welcomePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 20));
+        JPanel welcomePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 20));
         welcomePanel.setBackground(Color.decode("#f0f0f0"));
         welcomePanel.setBounds(0, 60, (int) screenSize.getWidth(), 80);
 
@@ -159,6 +159,7 @@ public class Supervisor extends Login implements workDetails, ActionListener {
         headerPanel.add(logoLabel);
         headerPanel.add(titleLabel);
         welcomePanel.add(welcomeLabel);
+        welcomePanel.add(welcomeLabel);
         welcomePanel.add(refreshBtn);
         welcomePanel.add(logOutBtn);
 
@@ -166,7 +167,7 @@ public class Supervisor extends Login implements workDetails, ActionListener {
         f.add(welcomePanel);
         f.add(forcurrentWorkLabel);
 
-        String sql2 = "select w_id,  s_day, s_month, s_year, e_day, e_month, e_year, siteloc,fname||' '||lname, totalarea, totalestimate, paymentstatus, s_id from client natural join work natural join site where work.o_id=?  and client.c_id=work.c_id";
+        String sql2 = "select w_id,  s_day, s_month, s_year, e_day, e_month, e_year, siteloc,fname||' '||lname, totalarea, totalestimate, paymentstatus, s_id, c_id from client natural join work natural join site where work.o_id=?  and client.c_id=work.c_id";
         ResultSet acceptWorkDetails;
         try {
             PreparedStatement prepareStatement1 = con.prepareStatement(sql2);
@@ -245,7 +246,7 @@ public class Supervisor extends Login implements workDetails, ActionListener {
                 contactClientBtn.setBackground(Color.decode("#a39887"));
                 // contactClient.setForeground(Color.decode("#0a0a0a"));
                 contactClientBtn.setFocusPainted(false);
-                contactClientBtn.setName(acceptWorkDetails.getString(1));
+                contactClientBtn.setName("CTC"+acceptWorkDetails.getString(14));                
                 contactClientBtn.addActionListener(this);
 
                 currentWorkOptions.add(UpdateBtn);
@@ -254,8 +255,7 @@ public class Supervisor extends Login implements workDetails, ActionListener {
                 currentWorkOptions.add(getReportBtn);
 
                 headerPanel.add(logoLabel);
-                headerPanel.add(titleLabel);
-                welcomePanel.add(welcomeLabel);
+                headerPanel.add(titleLabel);               
                 currentWorkPanel.add(currentWID);
                 currentWorkPanel.add(currentWStart);
                 currentWorkPanel.add(currentClientName);
@@ -446,8 +446,9 @@ public class Supervisor extends Login implements workDetails, ActionListener {
 
                 Materials m1 = new Materials(idneed, idneed.substring(36));
 
-            } else if (code.equals("CCT")) {
+            } else if (code.equals("CTC")) {
                 System.out.println("Contact client");
+                contactClient(idneed);
 
             } else if (code.equals("GTR")) {
                 System.out.println("GET report ");
@@ -458,67 +459,84 @@ public class Supervisor extends Login implements workDetails, ActionListener {
         }
 
     }
-    /**
-     * 
-     */
-    // public void s_id;
 
-    /**
-     * 
-     */
-    // public void s_Name;
+    public void contactClient(String clientID) {
+        String sql = " select fname, lname from client where c_id=? ";
+        String sql1 = " select phone, mailid from contact where id=?";
+        ResultSet rs, rs1;
+        try {
+            PreparedStatement prepareStatement = con.prepareStatement(sql);
+            prepareStatement.setObject(1, UUID.fromString(clientID));
+            rs = prepareStatement.executeQuery();
 
-    /**
-     * 
-     */
-    public void seeAllworkReq() {
-        // TODO implement here
+            PreparedStatement prepareStatement1 = con.prepareStatement(sql1);
+            prepareStatement1.setObject(1, UUID.fromString(clientID));
+            rs1 = prepareStatement1.executeQuery();
+
+            while (rs.next()) {
+                this.clientName = rs.getString(1) + rs.getString(2);
+
+            }
+            while (rs1.next()) {
+                this.clientMail = rs1.getString(2);
+                this.clientPhone = rs1.getString(1);
+            }
+
+        } catch (SQLException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+        JFrame f = new JFrame();
+        f.setVisible(true);
+        f.setSize(700, 260);
+        f.setLayout(null);
+        f.setLocation((int) screenSize.getWidth() / 3, (int) screenSize.getHeight() / 3);
+        f.getContentPane().setBackground(Color.decode("#d1c4b2"));
+        // f.setTitle("Contact Supervisor");
+
+        JPanel forheaderLabel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        forheaderLabel.setBackground(Color.decode("#40392f"));
+        forheaderLabel.setBorder(BorderFactory.createLineBorder(Color.decode("#ebc38a")));
+        forheaderLabel.setBounds(0, 0, 700, 80);
+
+        JLabel headerLabel = new JLabel("Client Contact Details");
+        headerLabel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        headerLabel.setHorizontalAlignment(JLabel.LEFT);
+        headerLabel.setForeground(Color.decode("#ebc38a"));
+        headerLabel.setFont(new Font("SansSerif", Font.PLAIN, 30));
+
+        forheaderLabel.add(headerLabel);
+
+        JLabel Sname = new JLabel("Client Name:         " + this.clientName);
+        Sname.setForeground(Color.decode("#523b2b"));
+        Sname.setFont(new Font("Serif", Font.BOLD, 15));
+
+        JLabel email = new JLabel("Client Email:          " + this.clientMail);
+        email.setForeground(Color.decode("#523b2b"));
+        email.setFont(new Font("Serif", Font.BOLD, 15));
+
+        JLabel phNum = new JLabel("Client Number:      " + this.clientPhone);
+        phNum.setForeground(Color.decode("#523b2b"));
+        phNum.setFont(new Font("Serif", Font.BOLD, 15));
+
+        JPanel snamePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        snamePanel.add(Sname);
+        Sname.setBounds(30, 80, 700, 30);
+
+        JPanel emailPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        emailPanel.add(email);
+        email.setBounds(30, 120, 700, 30);
+
+        JPanel phNumPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        phNumPanel.add(phNum);
+        phNum.setBounds(30, 160, 700, 30);
+
+        f.add(forheaderLabel);
+        f.add(Sname);
+        f.add(email);
+        f.add(phNum);
+
     }
-
-    /**
-     * @param value
-     */
-    public void acceptWorkReq(int value) {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    public void updateSitedetails() {
-        // TODO implement here
-    }
-
-    /**
-     * @return
-     */
-    public void getS_id() {
-        // TODO implement here
-        // return null;
-    }
-
-    /**
-     * @return
-     */
-    public void getS_Name() {
-        // TODO implement here
-        // return null;
-    }
-
-    /**
-     * @param value
-     */
-    public void setS_Name(int value) {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-
-    /**
-     * 
-     */
 
     @Override
     public void login() {
@@ -759,4 +777,68 @@ public class Supervisor extends Login implements workDetails, ActionListener {
         viewWorkFrame.setVisible(true);
     }
 
+
+    /**
+     * 
+     */
+    // public void s_id;
+
+    /**
+     * 
+     */
+    // public void s_Name;
+
+    /**
+     * 
+     */
+    // public void seeAllworkReq() {
+    //     // TODO implement here
+    // }
+
+    // /**
+    //  * @param value
+    //  */
+    // public void acceptWorkReq(int value) {
+    //     // TODO implement here
+    // }
+
+    // /**
+    //  * 
+    //  */
+    // public void updateSitedetails() {
+    //     // TODO implement here
+    // }
+
+    // /**
+    //  * @return
+    //  */
+    // public void getS_id() {
+    //     // TODO implement here
+    //     // return null;
+    // }
+
+    // /**
+    //  * @return
+    //  */
+    // public void getS_Name() {
+    //     // TODO implement here
+    //     // return null;
+    // }
+
+    // /**
+    //  * @param value
+    //  */
+    // public void setS_Name(int value) {
+    //     // TODO implement here
+    // }
+
+    // /**
+    //  * 
+    //  */
+
+    // /**
+    //  * 
+    //  */
+
+   
 }

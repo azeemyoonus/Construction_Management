@@ -17,10 +17,12 @@ public class Payment implements ActionListener {
     JFrame paymentFrame;
     JLabel amountLabel;
     JButton Make_PaymentBtn;
-    public int estimate;
-    public String w_id;
+   
     Config connection = new Config();
     Connection con = connection.dbConnect();
+
+    public int estimate;
+    public String w_id;
     public int count;
 
     /**
@@ -109,16 +111,25 @@ public class Payment implements ActionListener {
     public void makePayment(String w_id) {
         paymentFrame = new JFrame();
         paymentFrame.setVisible(true);
-        paymentFrame.setSize(400, 250);
+        paymentFrame.setSize((int) screenSize.getWidth() / 2, 250);
         paymentFrame.setLayout(new GridLayout(3, 0));
         paymentFrame.setLocation((int) screenSize.getWidth() / 3, (int) screenSize.getHeight() / 3);
-        paymentFrame.getContentPane().setBackground(Color.decode("#f0f0f0"));
+        paymentFrame.getContentPane().setBackground(Color.decode("#d1c4b2"));
+
         // f.setTitle("Payment Portal");
 
-        JPanel titlePanel = new JPanel();
-        JLabel supervisorLabel = new JLabel("Payment Portal");
-        supervisorLabel.setFont(new Font("SansSerif", Font.PLAIN, 38));
-        titlePanel.add(supervisorLabel);
+        JPanel forheaderLabel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        forheaderLabel.setBackground(Color.decode("#40392f"));
+        forheaderLabel.setBorder(BorderFactory.createLineBorder(Color.decode("#ebc38a")));
+        forheaderLabel.setBounds(0, 0, (int) screenSize.getWidth()/2 , 80);
+
+        JLabel headerLabel = new JLabel("Payment Details");
+        headerLabel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        headerLabel.setHorizontalAlignment(JLabel.LEFT);
+        headerLabel.setForeground(Color.decode("#ebc38a"));
+        headerLabel.setFont(new Font("SansSerif", Font.PLAIN, 30));
+
+        forheaderLabel.add(headerLabel);
 
         String sql = "select totalestimate from work where w_id =?";
         ResultSet rs;
@@ -153,7 +164,7 @@ public class Payment implements ActionListener {
         submitPanel.setAlignmentY(SwingConstants.BOTTOM);
         submitPanel.add(Make_PaymentBtn);
 
-        paymentFrame.add(titlePanel);
+        paymentFrame.add(forheaderLabel);
         paymentFrame.add(amountPanel);
         paymentFrame.add(submitPanel);
     }
@@ -170,10 +181,10 @@ public class Payment implements ActionListener {
 
     /**
      * 
-     */
-    public void totalCost() {
-        // TODO implement here
-    }
+    //  */
+    // public void totalCost() {
+    //     // TODO implement here
+    // }
 
     @Override
     public void actionPerformed(ActionEvent e) {

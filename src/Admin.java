@@ -72,8 +72,8 @@ public class Admin extends Login implements workDetails, ActionListener {
             addstaffFrame.setSize(700, 550);
             addstaffFrame.setLocation((int) screenSize.getWidth() / 4, (int) screenSize.getHeight() / 4);
             addstaffFrame.setLayout(null);
-            addstaffFrame.getContentPane().setBackground(Color.decode("#f0f0f0"));
-            addstaffFrame.setTitle("Add New Staff");
+            addstaffFrame.getContentPane().setBackground(Color.decode("#d1c4b2"));;
+            // addstaffFrame.setTitle("Add New Staff");
 
             JPanel forheaderLabel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             forheaderLabel.setBackground(Color.decode("#40392f"));
@@ -231,34 +231,6 @@ public class Admin extends Login implements workDetails, ActionListener {
         login();
     }
 
-    // public void getAd_id() {
-    // // TODO implement here
-    // return null;
-    // }
-
-    /**
-     * @return
-     */
-    // public void getAd_name() {
-    // // TODO implement here
-    // return null;
-    // }
-
-    /**
-     * @param value
-     */
-    // public void setAd_name(void value) {
-    // // TODO implement here
-    // }
-
-    /**
-     * 
-     */
-
-    /**
-     * 
-     */
-
     @Override
     public void login() {
         System.out.print("Login as Admin");
@@ -327,21 +299,6 @@ public class Admin extends Login implements workDetails, ActionListener {
         // TODO Auto-generated method stub
         f.dispose();
     }
-
-    /**
-     * @param value
-     */
-    // public abstract void viewWork(void value);
-
-    /**
-     * @param value
-     */
-    // public abstract void viewWork(void value);
-
-    /**
-     * @param value
-     */
-    // public abstract void viewWork(void value);
 
     public void loadAdminPanel(String stringID) {
 
@@ -838,4 +795,45 @@ public class Admin extends Login implements workDetails, ActionListener {
         viewWorkFrame.setVisible(true);
     }
 
+
+//       /**
+//      * @param value
+//      */
+//     // public abstract void viewWork(void value);
+// // public void getAd_id() {
+//     // // TODO implement here
+//     // return null;
+//     // }
+
+//     /**
+//      * @return
+//      */
+//     // public void getAd_name() {
+//     // // TODO implement here
+//     // return null;
+//     // }
+
+//     /**
+//      * @param value
+//      */
+//     // public void setAd_name(void value) {
+//     // // TODO implement here
+//     // }
+
+//     /**
+//      * 
+//      */
+
+//     /**
+//      * 
+//      */
+//     /**
+//      * @param value
+//      */
+//     // public abstract void viewWork(void value);
+
+//     /**
+//      * @param value
+//      */
+//     // public abstract void viewWork(void value);
 }

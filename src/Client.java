@@ -33,16 +33,13 @@ public class Client extends Login implements workDetails, ActionListener {
     work w1;
     Config connection = new Config();
     Connection con = connection.dbConnect();
+
     public String StringId, site_id, supervisorName, supervisorMail, supervisorPhone;
     private String name;
 
-    /**
-     * Default constructor
-     */
     public Client() {
         login();
     }
-    // Password p = new Password(new BCryptPasswordEncoder().encode(encodedPw));
 
     public void accountCreate() {
         createFrame = new JFrame();
@@ -50,10 +47,18 @@ public class Client extends Login implements workDetails, ActionListener {
         createFrame.setSize((int) (screenSize.getWidth()), (int) (screenSize.getHeight() / 2));
         createFrame.setLocation((int) screenSize.getWidth() / 4, (int) screenSize.getHeight() / 4);
 
-        JPanel titlePanel = new JPanel();
-        JLabel supervisorLabel = new JLabel("Create An Account");
-        supervisorLabel.setFont(new Font("SansSerif", Font.PLAIN, 38));
-        titlePanel.add(supervisorLabel);
+        JPanel forheaderLabel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        forheaderLabel.setBackground(Color.decode("#40392f"));
+        forheaderLabel.setBorder(BorderFactory.createLineBorder(Color.decode("#ebc38a")));
+        forheaderLabel.setBounds(0, 0, (int) screenSize.getWidth(), 80);
+
+        JLabel headerLabel = new JLabel("Client Account Create");
+        headerLabel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        headerLabel.setHorizontalAlignment(JLabel.LEFT);
+        headerLabel.setForeground(Color.decode("#ebc38a"));
+        headerLabel.setFont(new Font("SansSerif", Font.PLAIN, 30));
+
+        forheaderLabel.add(headerLabel);
         JLabel userLabel = new JLabel();
         userLabel.setText("<html>Username</html>"); // set label value for textField1
         userLabel.setBackground(Color.DARK_GRAY);
@@ -127,7 +132,7 @@ public class Client extends Login implements workDetails, ActionListener {
         submitPanel.add(accCreateClnBtn);
         submitPanel.add(goTologinBtn);
 
-        createFrame.add(titlePanel);
+        createFrame.add(forheaderLabel);
         createFrame.add(namePanel);
 
         createFrame.add(usernamePanel);
@@ -720,88 +725,6 @@ public class Client extends Login implements workDetails, ActionListener {
         // f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);// terminate program when
         // closes frame
     }
-    /**
-     * 
-     */
-    // private void c_Id;
-
-    /**
-     * 
-     */
-    // private void c_Name;
-
-    /**
-     * 
-     */
-    public void signUp() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    public void workReq() {
-        // TODO implement here
-    }
-
-    /**
-     * @param value
-     */
-    // public void getAllMyWork(void value) {
-    // TODO implement here
-    // }
-
-    /**
-     * 
-     */
-    public void getpastWork() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    public void cancelWork() {
-        // TODO implement here
-    }
-
-    /**
-     * @param value
-     */
-    // public void makePayment(void value) {
-    // // TODO implement here
-    // }
-
-    /**
-     * @return
-     */
-    // public void getC_Id() {
-    // // TODO implement here
-    // return null;
-    // }
-
-    /**
-     * @return
-     */
-    // public void getC_Name() {
-    // // TODO implement here
-    // return null;
-    // }
-
-    /**
-     * @param value
-     */
-    // public void setC_Name(void value) {
-    // // TODO implement here
-    // }
-
-    /**
-     * 
-     */
-
-    /**
-     * 
-     */
 
     @Override
     public void logout() {
@@ -988,8 +911,91 @@ public class Client extends Login implements workDetails, ActionListener {
     }
 
     /**
-     * @param value
+     * 
      */
-    // public abstract void viewWork(void value);
+    // private void c_Id;
+
+    /**
+     * 
+     */
+    // private void c_Name;
+
+    /**
+     * 
+     */
+    // public void signUp() {
+    // // TODO implement here
+    // }
+
+    // /**
+    // *
+    // */
+    // public void workReq() {
+    // // TODO implement here
+    // }
+
+    // /**
+    // * @param value
+    // */
+    // // public void getAllMyWork(void value) {
+    // // TODO implement here
+    // // }
+
+    // /**
+    // *
+    // */
+    // public void getpastWork() {
+    // // TODO implement here
+    // }
+
+    // /**
+    // *
+    // */
+    // public void cancelWork() {
+    // // TODO implement here
+    // }
+
+    // /**
+    // * @param value
+    // */
+    // // public void makePayment(void value) {
+    // // // TODO implement here
+    // // }
+
+    // /**
+    // * @return
+    // */
+    // // public void getC_Id() {
+    // // // TODO implement here
+    // // return null;
+    // // }
+
+    // /**
+    // * @return
+    // */
+    // // public void getC_Name() {
+    // // // TODO implement here
+    // // return null;
+    // // }
+
+    // /**
+    // * @param value
+    // */
+    // // public void setC_Name(void value) {
+    // // // TODO implement here
+    // // }
+
+    // /**
+    // *
+    // */
+
+    // /**
+    // *
+    // */
+
+    // /**
+    // * @param value
+    // */
+    // // public abstract void viewWork(void value);
 
 }

@@ -28,6 +28,7 @@ public class Materials implements ActionListener, ItemListener {
     JComboBox<String> workStatusComboBox;
     Config connection = new Config();
     Connection con = connection.dbConnect();
+
     String w_id, siteId;
     String[] str;
 
@@ -54,15 +55,16 @@ public class Materials implements ActionListener, ItemListener {
         addMatToComFrame = new JFrame();
         addMatToComFrame.getContentPane().invalidate();
         addMatToComFrame.setSize(700, 350);
-        addMatToComFrame.setLocation((int) screenSize.getWidth() / 4, (int) screenSize.getHeight() / 4);        
+        addMatToComFrame.setLocation((int) screenSize.getWidth() / 4, (int) screenSize.getHeight() / 4);
         addMatToComFrame.setLayout(null);
+        addMatToComFrame.getContentPane().setBackground(Color.decode("#d1c4b2"));
 
         JPanel forheaderLabel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         forheaderLabel.setBackground(Color.decode("#40392f"));
         forheaderLabel.setBorder(BorderFactory.createLineBorder(Color.decode("#ebc38a")));
         forheaderLabel.setBounds(0, 0, (int) screenSize.getWidth(), 80);
 
-        JLabel headerLabel = new JLabel("Material Details");
+        JLabel headerLabel = new JLabel("Add Materials");
         headerLabel.setBorder(new EmptyBorder(20, 20, 20, 20));
         headerLabel.setHorizontalAlignment(JLabel.LEFT);
         headerLabel.setForeground(Color.decode("#ebc38a"));
@@ -70,29 +72,29 @@ public class Materials implements ActionListener, ItemListener {
 
         forheaderLabel.add(headerLabel);
 
-
-
-        
-
         JLabel mNameLabel = new JLabel("Material name: ");
         // fnameLabel.setForeground(Color.decode("#ebc38a"));
         mNameLabel.setFont(new Font("SansSerif", Font.PLAIN, 25));
         mNameLabel.setBounds(80, 80, 200, 30);
+        mNameLabel.setBackground(Color.decode("#d1c4b2"));
 
         JLabel mCostLabel = new JLabel("Cost : ");
         // lnameLabel.setForeground(Color.decode("#ebc38a"));
         mCostLabel.setFont(new Font("SansSerif", Font.PLAIN, 25));
         mCostLabel.setBounds(80, 120, 200, 30);
+        mCostLabel.setBackground(Color.decode("#d1c4b2"));
 
         JLabel mSizeLabel = new JLabel("Size : ");
         // rollLabel.setForeground(Color.decode("#ebc38a"));
         mSizeLabel.setFont(new Font("SansSerif", Font.PLAIN, 25));
         mSizeLabel.setBounds(80, 165, 200, 30);
+        mSizeLabel.setBackground(Color.decode("#d1c4b2"));
 
         JLabel mCompanyLabel = new JLabel("Company : ");
         // mailLabel.setForeground(Color.decode("#ebc38a"));
         mCompanyLabel.setFont(new Font("SansSerif", Font.PLAIN, 25));
         mCompanyLabel.setBounds(80, 210, 200, 30);
+        mCompanyLabel.setBackground(Color.decode("#d1c4b2"));
 
         mNameField = new JTextField();
         mNameField.setBounds(300, 85, 200, 30);
@@ -113,7 +115,7 @@ public class Materials implements ActionListener, ItemListener {
         addMatToComBtn.addActionListener(this);
         addMatToComBtn.setBounds(250, 260, 150, 30);
 
-        addMatToComFrame.getContentPane().setBackground(Color.decode("#f0f0f0"));
+        // addMatToComFrame.getContentPane().setBackground(Color.decode("#f0f0f0"));
 
         addMatToComFrame.add(forheaderLabel);
 
@@ -231,28 +233,39 @@ public class Materials implements ActionListener, ItemListener {
     private void addMaterial() {
         addMaterials = new JFrame();
         addMaterials.setLayout(new GridLayout(4, 0));
-        addMaterials.setSize((int) screenSize.getWidth() / 2, (int) (screenSize.getHeight() + 600) / 6);
+        addMaterials.setSize((int) screenSize.getWidth() / 2, 300);
         addMaterials.setLocation((int) screenSize.getWidth() / 4, (int) screenSize.getHeight() / 4);
+        addMaterials.getContentPane().setBackground(Color.decode("#d1c4b2"));
 
-        JPanel titlePanel = new JPanel();
-        JLabel addMaterialLabel = new JLabel("Add Materials");
-        addMaterialLabel.setFont(new Font("SansSerif", Font.PLAIN, 38));
-        titlePanel.add(addMaterialLabel);
+        JPanel forheaderLabel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        forheaderLabel.setBackground(Color.decode("#40392f"));
+        forheaderLabel.setBorder(BorderFactory.createLineBorder(Color.decode("#ebc38a")));
+        forheaderLabel.setBounds(0, 0, (int) screenSize.getWidth(), 80);
+
+        JLabel headerLabel = new JLabel("Add Material");
+        headerLabel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        headerLabel.setHorizontalAlignment(JLabel.LEFT);
+        headerLabel.setForeground(Color.decode("#ebc38a"));
+        headerLabel.setFont(new Font("SansSerif", Font.PLAIN, 30));
+
+        forheaderLabel.add(headerLabel);
 
         JLabel matSpecLabel = new JLabel();
         matSpecLabel.setText("<html>&nbsp;&nbsp;&nbsp;Material Sepc: </html>"); // set label value for textField1
         matSpecLabel.setBackground(Color.DARK_GRAY);
-
+        // matSpecLabel.setBounds(0, 80, (int) (screenSize.getHeight() + 600) / 6, 30);
         matQtyArea = new JTextField(2);
 
         JLabel matQtyLabel = new JLabel();
         matQtyLabel.setText("<html>&nbsp;&nbsp;&nbsp;Material Quantity: </html>"); // set label value for textField1
         matQtyLabel.setBackground(Color.DARK_GRAY);
+        // matQtyLabel.setBounds(0, 110,  (int) (screenSize.getHeight() + 600) / 6, 30);
 
         JPanel qtyPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         qtyPanel.add(matQtyLabel);
         qtyPanel.add(matQtyArea);
-
+        qtyPanel.setBackground(Color.decode("#d1c4b2"));
+        qtyPanel.setBounds(0, 150, (int) (screenSize.getHeight() + 600) / 6, 30);
         getMaterials();
 
         this.str = new String[materialNames.size()];
@@ -267,6 +280,9 @@ public class Materials implements ActionListener, ItemListener {
         JPanel materialPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         materialPanel.add(matSpecLabel);
         materialPanel.add(materalsBox);
+        materialPanel.setBackground(Color.decode("#d1c4b2"));
+        materialPanel.setBounds(0, 120, (int) (screenSize.getHeight() + 600) / 6, 30);
+
 
         addmatBtn = new JButton("<html>&nbsp;Add Material</html>");
         addmatBtn.setBackground(Color.decode("#40392f"));
@@ -277,8 +293,10 @@ public class Materials implements ActionListener, ItemListener {
         JPanel submitPanel = new JPanel();
         submitPanel.setAlignmentY(SwingConstants.BOTTOM);
         submitPanel.add(addmatBtn);
+        submitPanel.setBackground(Color.decode("#d1c4b2"));
+        submitPanel.setBounds(0, 150, (int) (screenSize.getHeight() + 600) / 6, 30);
 
-        addMaterials.add(titlePanel);
+        addMaterials.add(forheaderLabel);
         addMaterials.add(materialPanel);
         addMaterials.add(qtyPanel);
         addMaterials.add(submitPanel);
@@ -332,20 +350,19 @@ public class Materials implements ActionListener, ItemListener {
                 e1.printStackTrace();
             }
 
-        }
-        else if (e.getSource()==addMatToComBtn){
+        } else if (e.getSource() == addMatToComBtn) {
             String sql1 = "insert into materialspec values(?,?,?,?,?)";
             UUID id = UUID.randomUUID();
-            try{
-                PreparedStatement preparedStatement1 =con.prepareStatement(sql1);
+            try {
+                PreparedStatement preparedStatement1 = con.prepareStatement(sql1);
                 preparedStatement1.setObject(1, id);
                 preparedStatement1.setString(2, mNameField.getText());
                 preparedStatement1.setInt(3, Integer.parseInt(mCostField.getText()));
                 preparedStatement1.setString(4, mSizeField.getText());
                 preparedStatement1.setString(5, mCompanyField.getText());
-              int count = preparedStatement1.executeUpdate();
-              System.out.println(count+" row updated");
-                if (count==1){
+                int count = preparedStatement1.executeUpdate();
+                System.out.println(count + " row updated");
+                if (count == 1) {
                     addMatToComFrame.dispose();
                 }
             } catch (SQLException e1) {
@@ -377,11 +394,6 @@ public class Materials implements ActionListener, ItemListener {
         }
 
     }
-
-    /**
-     * 
-     */
-    // private void m_Id;
 
     @Override
     public void itemStateChanged(ItemEvent e) {

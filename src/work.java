@@ -7,6 +7,7 @@ import java.awt.event.ItemListener;
 import java.sql.*;
 import java.time.LocalDate;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 public class work implements ActionListener, ItemListener {
 
@@ -20,20 +21,16 @@ public class work implements ActionListener, ItemListener {
 
   Config connection = new Config();
   Connection con = connection.dbConnect();
+
   String workTypes[] = { "House", "offices", "Shopping Complex" };
   private String name;
   public int s_day, s_month, s_year, e_day, e_month, e_year;
   public String c_id;
 
-  /**
-   * Default constructor
-   */
-
   public work(String c_id) {
     if (c_id != null) {
       String sql = " select * from client where c_id=? ";
       ResultSet rs;
-      String name;
       this.c_id = c_id;
 
       try {
@@ -41,10 +38,9 @@ public class work implements ActionListener, ItemListener {
         prepareStatement.setObject(1, UUID.fromString(c_id));
         rs = prepareStatement.executeQuery();
         while (rs.next()) {
-          // System.out.println(rs.getObject(1) + " " + rs.getString(2));
+
           this.name = rs.getString(2) + rs.getString(3);
-          // loadClientPanel(rs.getString(1));
-          // loginFrame.dispose();
+
         }
 
       } catch (SQLException e1) {
@@ -56,15 +52,25 @@ public class work implements ActionListener, ItemListener {
       reqWorkFrame.setLayout(new GridLayout(6, 0));
       reqWorkFrame.setSize((int) screenSize.getWidth() / 2, (int) (screenSize.getHeight() + 550) / 3);
       reqWorkFrame.setLocation((int) screenSize.getWidth() / 4, (int) screenSize.getHeight() / 4);
+      reqWorkFrame.getContentPane().setBackground(Color.decode("#d1c4b2"));
 
-      JPanel titlePanel = new JPanel();
-      JLabel workLabel = new JLabel("Request A Work");
-      workLabel.setFont(new Font("SansSerif", Font.PLAIN, 38));
-      titlePanel.add(workLabel);
+      JPanel forheaderLabel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+      forheaderLabel.setBackground(Color.decode("#40392f"));
+      forheaderLabel.setBorder(BorderFactory.createLineBorder(Color.decode("#ebc38a")));
+      forheaderLabel.setBounds(0, 0, (int) screenSize.getWidth(), 80);
+
+      JLabel headerLabel = new JLabel("Request A Work");
+      headerLabel.setBorder(new EmptyBorder(20, 20, 20, 20));
+      headerLabel.setHorizontalAlignment(JLabel.LEFT);
+      headerLabel.setForeground(Color.decode("#ebc38a"));
+      headerLabel.setFont(new Font("SansSerif", Font.PLAIN, 30));
+
+      forheaderLabel.add(headerLabel);
+
       JLabel userLabel = new JLabel();
       userLabel.setText("<html>&nbsp;&nbsp;&nbsp;Name: </html>"); // set label value for textField1
       userLabel.setBackground(Color.DARK_GRAY);
-      titlePanel.add(workLabel);
+      // titlePanel.add(workLabel);
 
       nameField = new JTextField(15);
       nameField.setText(this.name);
@@ -82,12 +88,14 @@ public class work implements ActionListener, ItemListener {
       JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
       namePanel.add(userLabel);
       namePanel.add(nameField);
+      namePanel.setBackground(Color.decode("#d1c4b2"));
 
       JPanel sitePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
       sitePanel.add(siteLocLabel);
       sitePanel.add(siteLocField);
       sitePanel.add(siteAreaLabel);
       sitePanel.add(siteAreaField);
+      sitePanel.setBackground(Color.decode("#d1c4b2"));
 
       JLabel workTypeLabel = new JLabel();
       workTypeLabel.setText("<html>&nbsp;&nbsp;&nbsp;Work Type </html>"); // set label value for textField1
@@ -99,6 +107,7 @@ public class work implements ActionListener, ItemListener {
       JPanel workTypePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
       workTypePanel.add(workTypeLabel);
       workTypePanel.add(workTypesBox);
+      workTypePanel.setBackground(Color.decode("#d1c4b2"));
 
       addWorkBtn = new JButton("<html>&nbsp;Request A Work</html>");
       addWorkBtn.setBackground(Color.decode("#40392f"));
@@ -109,8 +118,9 @@ public class work implements ActionListener, ItemListener {
       JPanel submitPanel = new JPanel();
       submitPanel.setAlignmentY(SwingConstants.BOTTOM);
       submitPanel.add(addWorkBtn);
+      submitPanel.setBackground(Color.decode("#d1c4b2"));
 
-      reqWorkFrame.add(titlePanel);
+      reqWorkFrame.add(forheaderLabel);
       reqWorkFrame.add(namePanel);
       reqWorkFrame.add(sitePanel);
       reqWorkFrame.add(workTypePanel);
@@ -128,27 +138,35 @@ public class work implements ActionListener, ItemListener {
     System.out.println("reached   .");
     JFrame updateWorkFrame = new JFrame();
     updateWorkFrame.setLayout(null);
-    updateWorkFrame.setSize(600, 300);
+    updateWorkFrame.setSize((int) screenSize.getWidth() / 2, 310);
     updateWorkFrame.setLocation((int) screenSize.getWidth() / 4, (int) screenSize.getHeight() / 4);
     updateWorkFrame.setTitle("Work Details");
-    updateWorkFrame.getContentPane().setBackground(Color.decode("#f0f0f0"));
+    updateWorkFrame.getContentPane().setBackground(Color.decode("#d1c4b2"));
 
-    JLabel titelLabel = new JLabel("Update your Work Details");
-    titelLabel.setForeground(Color.black);
-    titelLabel.setFont(new Font("Serif", Font.BOLD, 20));
-    titelLabel.setBounds(170, 30, 400, 30);
+    JPanel forheaderLabel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    forheaderLabel.setBackground(Color.decode("#40392f"));
+    forheaderLabel.setBorder(BorderFactory.createLineBorder(Color.decode("#ebc38a")));
+    forheaderLabel.setBounds(0, 0, (int) screenSize.getWidth() / 2, 80);
+
+    JLabel headerLabel = new JLabel("Update Work Details");
+    headerLabel.setBorder(new EmptyBorder(20, 20, 20, 20));
+    headerLabel.setHorizontalAlignment(JLabel.LEFT);
+    headerLabel.setForeground(Color.decode("#ebc38a"));
+    headerLabel.setFont(new Font("SansSerif", Font.PLAIN, 30));
+
+    forheaderLabel.add(headerLabel);
 
     JLabel wordIdLabel = new JLabel("Work Id:");
-    wordIdLabel.setBounds(80, 70, 200, 30);
+    wordIdLabel.setBounds(80, 80, 200, 30);
 
     JLabel estLabel = new JLabel("Total Estimate:");
-    estLabel.setBounds(80, 110, 200, 30);
+    estLabel.setBounds(80, 120, 200, 30);
 
     JLabel payLabel = new JLabel("Payment Status");
-    payLabel.setBounds(80, 155, 200, 30);
+    payLabel.setBounds(80, 165, 200, 30);
 
     JLabel workStatusLabel = new JLabel("Work Status");
-    workStatusLabel.setBounds(80, 155, 200, 30);
+    workStatusLabel.setBounds(80, 165, 200, 30);
 
     String[] paymentStatusToChoose = { "true", "false" };
 
@@ -165,19 +183,19 @@ public class work implements ActionListener, ItemListener {
     estimateArea = new JTextField();
 
     updateWorkBtn = new JButton("Submit");
-    updateWorkBtn.setBounds(220, 220, 150, 30);
+    updateWorkBtn.setBounds(260, 230, 150, 30);
     updateWorkBtn.setBackground(Color.decode("#a39887"));
     updateWorkBtn.setFocusPainted(false);
     updateWorkBtn.setName(w_id);
     updateWorkBtn.addActionListener(this);
 
-    workIdArea.setBounds(300, 70, 200, 30);
+    workIdArea.setBounds(300, 80, 300, 30);
 
-    estimateArea.setBounds(300, 110, 200, 30);
-    paymentStatusComboBox.setBounds(300, 160, 200, 30);
-    workStatusComboBox.setBounds(300, 160, 200, 30);
+    estimateArea.setBounds(300, 120, 290, 30);
+    paymentStatusComboBox.setBounds(300, 170, 290, 30);
+    workStatusComboBox.setBounds(300, 170, 290, 30);
 
-    updateWorkFrame.add(titelLabel);
+    updateWorkFrame.add(forheaderLabel);
     updateWorkFrame.add(wordIdLabel);
     updateWorkFrame.add(workIdArea);
 
@@ -280,27 +298,5 @@ public class work implements ActionListener, ItemListener {
     }
 
   }
-
-  // public void w_id;
-
-  /**
-   * 
-   */
-  // public void date;
-
-  /**
-   * 
-   */
-  // public void s_id;
-
-  /**
-   * 
-   */
-  // public void type;
-
-  /**
-   * 
-   */
-  // private void paymentStatus;
 
 }
