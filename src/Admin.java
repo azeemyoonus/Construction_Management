@@ -1,5 +1,4 @@
 
-import java.util.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,32 +12,23 @@ import java.util.UUID;
 public class Admin extends Login implements workDetails, ActionListener {
 
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    JFrame addstaffFrame, f;
+    JFrame addstaffFrame, f, createFrame, viewWorkFrame, loginFrame;
     JComboBox<String> rolesComboxBox;
-    JTextField usernameField, loginUsernameField;
-    JButton loginSubmitBtn, viewWorkBtn, goTologinBtn, refreshBtn, addmatBtn, addStaffInFormBtn, addOfficeStaff,
-            addStaffBtn, logOutBtn;
-    // ss
-    JPanel formaterialLabel;
-    JTextField mailIdField, phoneField, fName, lName, mailArea, setUsenameField;
-    JPasswordField passwordField, loginPasswordField;
-    JPasswordField cnfPasswordField;
-    Boolean loginStatus = false;
+    JTextField usernameField, loginUsernameField, mailIdField, phoneField, fName, lName, mailArea, setUsenameField;
+    JButton loginSubmitBtn, viewWorkBtn, goTologinBtn, refreshBtn, addmatBtn,
+            addStaffInFormBtn, addOfficeStaff, addStaffBtn, logOutBtn;
+    JPanel formaterialLabel, allAvailableWorkPanel, viewWorkPanel, allMaterialPanel;
+    JPasswordField JPasswordField, passwordField, loginPasswordField, cnfPasswordField, setPassField;
     JScrollPane allAvailabeWorkScrollPane, allMaterialScrollPane;
-    JFrame createFrame, viewWorkFrame;
-    JPanel allAvailableWorkPanel, viewWorkPanel, allMaterialPanel;
-    JPasswordField setPassField;
-    JFrame loginFrame;
 
     Config connection = new Config();
     Connection con = connection.dbConnect();
-    public String StringId, adminName;
-    public String site_id;
+    public String site_id, ad_id, adminName;
     public int totalWorks, totalClients, totalSupervisor, totalOngoingwork;
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
+
         if (e.getSource() == loginSubmitBtn) {
             System.out.println("calling ..");
 
@@ -52,13 +42,12 @@ public class Admin extends Login implements workDetails, ActionListener {
                 while (rs.next()) {
                     System.out.println("hello ");
                     System.out.println(rs.getObject(1) + " " + rs.getString(2));
-                    this.StringId = rs.getString(2);
-                    loadAdminPanel(this.StringId);
+                    this.ad_id = rs.getString(2);
+                    loadAdminPanel(this.ad_id);
                     loginFrame.dispose();
                 }
 
             } catch (SQLException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
 
@@ -67,119 +56,7 @@ public class Admin extends Login implements workDetails, ActionListener {
             m1.addMaterialstoCompany();
 
         } else if (e.getSource() == addOfficeStaff) {
-            addstaffFrame = new JFrame();
-            addstaffFrame.setVisible(true);
-            addstaffFrame.setSize(700, 550);
-            addstaffFrame.setLocation((int) screenSize.getWidth() / 4, (int) screenSize.getHeight() / 4);
-            addstaffFrame.setLayout(null);
-            addstaffFrame.getContentPane().setBackground(Color.decode("#d1c4b2"));;
-            // addstaffFrame.setTitle("Add New Staff");
-
-            JPanel forheaderLabel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            forheaderLabel.setBackground(Color.decode("#40392f"));
-            forheaderLabel.setBorder(BorderFactory.createLineBorder(Color.decode("#ebc38a")));
-            forheaderLabel.setBounds(0, 0, (int) screenSize.getWidth(), 80);
-
-            JLabel headerLabel = new JLabel("Office Staff Details");
-            headerLabel.setBorder(new EmptyBorder(20, 20, 20, 20));
-            headerLabel.setHorizontalAlignment(JLabel.LEFT);
-            headerLabel.setForeground(Color.decode("#ebc38a"));
-            headerLabel.setFont(new Font("SansSerif", Font.PLAIN, 30));
-
-            forheaderLabel.add(headerLabel);
-
-            // JPanel namepanel = new JPanel(new GridLayout(1, 0, 5, 5));
-            // currentWorkOptions.setBackground(Color.decode("#d1c4b2"));
-
-            JLabel fnameLabel = new JLabel("First name");
-            // fnameLabel.setForeground(Color.decode("#ebc38a"));
-            fnameLabel.setFont(new Font("SansSerif", Font.PLAIN, 25));
-            fnameLabel.setBounds(80, 80, 200, 30);
-
-            JLabel lnameLabel = new JLabel("Last name");
-            // lnameLabel.setForeground(Color.decode("#ebc38a"));
-            lnameLabel.setFont(new Font("SansSerif", Font.PLAIN, 25));
-            lnameLabel.setBounds(80, 120, 200, 30);
-
-            JLabel rollLabel = new JLabel("Roll");
-            // rollLabel.setForeground(Color.decode("#ebc38a"));
-            rollLabel.setFont(new Font("SansSerif", Font.PLAIN, 25));
-            rollLabel.setBounds(80, 165, 200, 30);
-
-            JLabel mailLabel = new JLabel("Email");
-            // mailLabel.setForeground(Color.decode("#ebc38a"));
-            mailLabel.setFont(new Font("SansSerif", Font.PLAIN, 25));
-            mailLabel.setBounds(80, 210, 200, 30);
-
-            JLabel pNum = new JLabel("Phone Number");
-            // pNum.setForeground(Color.decode("#ebc38a"));
-            pNum.setFont(new Font("SansSerif", Font.PLAIN, 25));
-            pNum.setBounds(80, 260, 200, 30);
-
-            JLabel setUname = new JLabel("Set Username");
-            // setUname.setForeground(Color.decode("#ebc38a"));
-            setUname.setFont(new Font("SansSerif", Font.PLAIN, 25));
-            setUname.setBounds(80, 310, 200, 30);
-
-            JLabel setPass = new JLabel("Set Password");
-            // setPass.setForeground(Color.decode("#ebc38a"));
-            setPass.setFont(new Font("SansSerif", Font.PLAIN, 25));
-            setPass.setBounds(80, 360, 200, 30);
-
-            String[] optionsToChoose = { "Admin", "Supervisor" };
-            rolesComboxBox = new JComboBox<>(optionsToChoose);
-            rolesComboxBox.setBackground(Color.white);
-
-            fName = new JTextField();
-            fName.setBounds(300, 80, 200, 30);
-
-            lName = new JTextField();
-            lName.setBounds(300, 120, 200, 30);
-
-            mailArea = new JTextField();
-            mailArea.setBounds(300, 220, 250, 30);
-
-            phoneField = new JTextField();
-            phoneField.setBounds(300, 270, 250, 30);
-
-            setUsenameField = new JTextField();
-            setUsenameField.setBounds(300, 320, 250, 30);
-
-            setPassField = new JPasswordField();
-            setPassField.setBounds(300, 370, 250, 30);
-
-            addStaffInFormBtn = new JButton("ADD");
-            addStaffInFormBtn.setBackground(Color.decode("#a39887"));
-            // addStaffBtn.setAlignmentX(300);
-            addStaffInFormBtn.setFocusPainted(false);
-            addStaffInFormBtn.addActionListener(this);
-            addStaffInFormBtn.setBounds(300, 430, 150, 30);
-
-            rolesComboxBox.setBounds(300, 170, 200, 30);
-
-            addstaffFrame.add(forheaderLabel);
-            addstaffFrame.add(fnameLabel);
-            addstaffFrame.add(fName);
-
-            addstaffFrame.add(lnameLabel);
-            addstaffFrame.add(lName);
-
-            addstaffFrame.add(rollLabel);
-            addstaffFrame.add(rolesComboxBox);
-
-            addstaffFrame.add(mailLabel);
-            addstaffFrame.add(mailArea);
-
-            addstaffFrame.add(pNum);
-            addstaffFrame.add(phoneField);
-
-            addstaffFrame.add(setUname);
-            addstaffFrame.add(setUsenameField);
-
-            addstaffFrame.add(setPass);
-            addstaffFrame.add(setPassField);
-
-            addstaffFrame.add(addStaffInFormBtn);
+            addOfficeStaff();
 
         } else if (e.getSource() == addStaffInFormBtn) {
             System.out.println("hello here");
@@ -207,7 +84,7 @@ public class Admin extends Login implements workDetails, ActionListener {
                     addstaffFrame.dispose();
                 }
             } catch (SQLException e1) {
-                // TODO Auto-generated catch block
+
                 e1.printStackTrace();
             }
         } else if (e.getSource() == logOutBtn) {
@@ -227,13 +104,117 @@ public class Admin extends Login implements workDetails, ActionListener {
 
     }
 
+    public void addOfficeStaff() {
+        addstaffFrame = new JFrame();
+        addstaffFrame.setVisible(true);
+        addstaffFrame.setSize(700, 550);
+        addstaffFrame.setLocation((int) screenSize.getWidth() / 4, (int) screenSize.getHeight() / 4);
+        addstaffFrame.setLayout(null);
+        addstaffFrame.getContentPane().setBackground(Color.decode("#d1c4b2"));
+        ;
+
+        JPanel forheaderLabel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        forheaderLabel.setBackground(Color.decode("#40392f"));
+        forheaderLabel.setBorder(BorderFactory.createLineBorder(Color.decode("#ebc38a")));
+        forheaderLabel.setBounds(0, 0, (int) screenSize.getWidth(), 80);
+
+        JLabel headerLabel = new JLabel("Office Staff Details");
+        headerLabel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        headerLabel.setHorizontalAlignment(JLabel.LEFT);
+        headerLabel.setForeground(Color.decode("#ebc38a"));
+        headerLabel.setFont(new Font("SansSerif", Font.PLAIN, 30));
+
+        forheaderLabel.add(headerLabel);
+
+        JLabel fnameLabel = new JLabel("First name");
+        fnameLabel.setFont(new Font("SansSerif", Font.PLAIN, 25));
+        fnameLabel.setBounds(80, 80, 200, 30);
+
+        JLabel lnameLabel = new JLabel("Last name");
+        lnameLabel.setFont(new Font("SansSerif", Font.PLAIN, 25));
+        lnameLabel.setBounds(80, 120, 200, 30);
+
+        JLabel rollLabel = new JLabel("Roll");
+        rollLabel.setFont(new Font("SansSerif", Font.PLAIN, 25));
+        rollLabel.setBounds(80, 165, 200, 30);
+
+        JLabel mailLabel = new JLabel("Email");
+        mailLabel.setFont(new Font("SansSerif", Font.PLAIN, 25));
+        mailLabel.setBounds(80, 210, 200, 30);
+
+        JLabel pNum = new JLabel("Phone Number");
+        pNum.setFont(new Font("SansSerif", Font.PLAIN, 25));
+        pNum.setBounds(80, 260, 200, 30);
+
+        JLabel setUname = new JLabel("Set Username");
+        setUname.setFont(new Font("SansSerif", Font.PLAIN, 25));
+        setUname.setBounds(80, 310, 200, 30);
+
+        JLabel setPass = new JLabel("Set Password");
+        setPass.setFont(new Font("SansSerif", Font.PLAIN, 25));
+        setPass.setBounds(80, 360, 200, 30);
+
+        String[] optionsToChoose = { "Admin", "Supervisor" };
+        rolesComboxBox = new JComboBox<>(optionsToChoose);
+        rolesComboxBox.setBackground(Color.white);
+
+        fName = new JTextField();
+        fName.setBounds(300, 80, 200, 30);
+
+        lName = new JTextField();
+        lName.setBounds(300, 120, 200, 30);
+
+        mailArea = new JTextField();
+        mailArea.setBounds(300, 220, 250, 30);
+
+        phoneField = new JTextField();
+        phoneField.setBounds(300, 270, 250, 30);
+
+        setUsenameField = new JTextField();
+        setUsenameField.setBounds(300, 320, 250, 30);
+
+        setPassField = new JPasswordField();
+        setPassField.setBounds(300, 370, 250, 30);
+
+        addStaffInFormBtn = new JButton("ADD");
+        addStaffInFormBtn.setBackground(Color.decode("#a39887"));
+        addStaffInFormBtn.setFocusPainted(false);
+        addStaffInFormBtn.addActionListener(this);
+        addStaffInFormBtn.setBounds(300, 430, 150, 30);
+
+        rolesComboxBox.setBounds(300, 170, 200, 30);
+
+        addstaffFrame.add(forheaderLabel);
+        addstaffFrame.add(fnameLabel);
+        addstaffFrame.add(fName);
+
+        addstaffFrame.add(lnameLabel);
+        addstaffFrame.add(lName);
+
+        addstaffFrame.add(rollLabel);
+        addstaffFrame.add(rolesComboxBox);
+
+        addstaffFrame.add(mailLabel);
+        addstaffFrame.add(mailArea);
+
+        addstaffFrame.add(pNum);
+        addstaffFrame.add(phoneField);
+
+        addstaffFrame.add(setUname);
+        addstaffFrame.add(setUsenameField);
+
+        addstaffFrame.add(setPass);
+        addstaffFrame.add(setPassField);
+
+        addstaffFrame.add(addStaffInFormBtn);
+    }
+
     public Admin() {
         login();
     }
 
     @Override
     public void login() {
-        System.out.print("Login as Admin");
 
         loginFrame = new JFrame();
         loginFrame.setLayout(new GridLayout(4, 0));
@@ -245,35 +226,24 @@ public class Admin extends Login implements workDetails, ActionListener {
         adminLabel.setFont(new Font("SansSerif", Font.PLAIN, 38));
         titlePanel.add(adminLabel);
         JLabel userLabel = new JLabel();
-        userLabel.setText("<html>&nbsp;&nbsp;&nbsp;Username</html>"); // set label value for textField1
+        userLabel.setText("<html>&nbsp;&nbsp;&nbsp;Username</html>");
         userLabel.setBackground(Color.DARK_GRAY);
 
-        // create text field to get username from the user
-        loginUsernameField = new JTextField(15); // set length of the text
+        loginUsernameField = new JTextField(30);
 
-        // create label for password
         JLabel passLabel = new JLabel();
-        passLabel.setText("<html>&nbsp;&nbsp;&nbsp;Password</html>"); // set label value for textField2
+        passLabel.setText("<html>&nbsp;&nbsp;&nbsp;Password</html>");
 
-        // create text field to get password from the user
-        loginPasswordField = new JPasswordField(15);
+        loginPasswordField = new JPasswordField(30);
 
         loginSubmitBtn = new JButton("<html>&nbsp;Submit</html>");
         loginSubmitBtn.setBackground(Color.decode("#40392f"));
         loginSubmitBtn.setForeground(Color.decode("#ebc38a"));
         loginSubmitBtn.setFocusPainted(false);
 
-        /*
-         * createClnBtn = new JButton("<html>&nbsp;Dont have Account?</html>");
-         * createClnBtn.setBackground(Color.decode("#40392f"));
-         * createClnBtn.setForeground(Color.decode("#ebc38a"));
-         * createClnBtn.setFocusPainted(false);
-         */
-
         JPanel usernamePanel = new JPanel();
         usernamePanel.add(userLabel);
         usernamePanel.add(loginUsernameField);
-        // usernamePanel.setAlignmentX(alignmentX);
 
         JPanel passwordPanel = new JPanel();
         passwordPanel.add(passLabel);
@@ -282,7 +252,6 @@ public class Admin extends Login implements workDetails, ActionListener {
         JPanel submitPanel = new JPanel();
         submitPanel.setAlignmentY(SwingConstants.BOTTOM);
         submitPanel.add(loginSubmitBtn);
-        // submitPanel.add(createClnBtn);
 
         loginFrame.add(titlePanel);
         loginFrame.add(usernamePanel);
@@ -296,27 +265,24 @@ public class Admin extends Login implements workDetails, ActionListener {
 
     @Override
     public void logout() {
-        // TODO Auto-generated method stub
+
         f.dispose();
     }
 
-    public void loadAdminPanel(String stringID) {
+    public void loadAdminPanel(String ad_id) {
 
         String sql6 = " select * from officestaff where id=? ";
         ResultSet rs1;
         try {
             PreparedStatement prepareStatement = con.prepareStatement(sql6);
-            prepareStatement.setObject(1, UUID.fromString(stringID));
+            prepareStatement.setObject(1, UUID.fromString(ad_id));
             rs1 = prepareStatement.executeQuery();
             while (rs1.next()) {
-                System.out.println(rs1.getObject(1) + " " + rs1.getString(2));
                 this.adminName = rs1.getString(2) + " " + rs1.getString(3);
-                // loadClientPanel(rs.getString(1));
-                // loginFrame.dispose();
+
             }
 
         } catch (SQLException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
 
@@ -394,13 +360,6 @@ public class Admin extends Login implements workDetails, ActionListener {
         logOutBtn.setFocusPainted(false);
         logOutBtn.addActionListener(this);
 
-        // add all components
-
-        // bodyButtons.add(seeAllWork);
-        // bodyButtons.add(ongoingWork);
-        // bodyButtons.add(pastWork);
-        // bodyButtons.add(supList);
-        // bodyButtons.add(clist);
         bodyButtons.add(addOfficeStaff);
         bodyButtons.add(addmatBtn);
         bodyButtons.add(logOutBtn);
@@ -422,7 +381,7 @@ public class Admin extends Login implements workDetails, ActionListener {
         forOngoingtWorkLabel.add(ongoingWorkLabel);
 
         allAvailableWorkPanel = new JPanel();
-        // allWorkPanel.setSize(800, 00);
+
         allAvailabeWorkScrollPane = new JScrollPane(allAvailableWorkPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         allAvailableWorkPanel.setLayout(new BoxLayout(allAvailableWorkPanel, BoxLayout.Y_AXIS));
@@ -430,13 +389,46 @@ public class Admin extends Login implements workDetails, ActionListener {
 
         f.add(headerPanel);
         f.add(welcomePanel);
-        // f.add(bodyButtons);
+
         f.add(forOngoingtWorkLabel);
+        viewOngoingWork();
+
+        JPanel generalInfoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        generalInfoPanel.setBackground(Color.decode("#40392f"));
+        generalInfoPanel.setBorder(BorderFactory.createLineBorder(Color.decode("#ebc38a")));
+        generalInfoPanel.setBounds(0, 460, (int) screenSize.getWidth(), 60);
+
+        JLabel generalInfoLabel = new JLabel("General Info");
+        generalInfoLabel.setBorder(new EmptyBorder(20, 20, 10, 10));
+        generalInfoLabel.setHorizontalAlignment(JLabel.LEFT);
+        generalInfoLabel.setForeground(Color.decode("#ebc38a"));
+        generalInfoLabel.setFont(new Font("SansSerif", Font.PLAIN, 20));
+
+        generalInfoPanel.add(generalInfoLabel);
+
+        f.add(generalInfoPanel);
+        JPanel footer = new JPanel();
+        footer.setLayout(new BorderLayout());
+        JLabel footerLabel = new JLabel(
+                "<html>copyright © 2021 - Albatross Builders <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;All Rights Reserved </html>",
+                SwingConstants.CENTER);
+        footerLabel.setVerticalAlignment(SwingConstants.TOP);
+        footerLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        footerLabel.setForeground(Color.decode("#403f3f"));
+        footer.setBackground(Color.decode("#f0f0f0"));
+        footer.setBounds(0, 670, (int) screenSize.getWidth(), 30);
+        footerLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        footer.add(footerLabel, BorderLayout.PAGE_END);
+        viewGeneralInfo();
+        f.add(footer);
+
+    }
+
+    public void viewOngoingWork() {
         String sql2 = "select w_id, s_day, s_month, s_year, e_day, e_month, e_year, siteloc,fname, totalarea, totalestimate, paymentstatus, s_id from officestaff natural join work natural join site where e_day is null  and officestaff.id=work.o_id";
         ResultSet workDetails;
         try {
             PreparedStatement prepareStatement1 = con.prepareStatement(sql2);
-            // prepareStatement1.setObject(1, UUID.fromString(stringID));
             workDetails = prepareStatement1.executeQuery();
 
             while (workDetails.next()) {
@@ -481,12 +473,10 @@ public class Admin extends Login implements workDetails, ActionListener {
 
                 viewWorkBtn = new JButton("view");
                 viewWorkBtn.setBackground(Color.decode("#a39887"));
-                // contactClient.setForeground(Color.decode("#0a0a0a"));
                 viewWorkBtn.setName("VIW" + workDetails.getString(1));
                 viewWorkBtn.addActionListener(this);
                 viewWorkBtn.setFocusPainted(false);
 
-                // currentWorkOptions.add(UpdateBtn);
                 availabeWorkOptions.add(viewWorkBtn);
 
                 JPanel availableWorkPanel = new JPanel(new GridLayout(3, 0));
@@ -501,36 +491,17 @@ public class Admin extends Login implements workDetails, ActionListener {
                 availableWorkPanel.add(PaymentStatusArea);
 
                 availableWorkPanel.add(availabeWorkOptions);
-                // allWorkScrollBar.add(currentWorkPanel);
-                // allWorkScrollBar.add(currentWorkOptions);
                 allAvailableWorkPanel.add(availableWorkPanel);
-                // allWorkPanel.add(currentWorkOptions);
-                // f.add(currentWorkPanel);
-                // f.add(currentWorkOptions);
 
             }
 
         } catch (SQLException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
         f.add(allAvailabeWorkScrollPane);
+    }
 
-        JPanel generalInfoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        generalInfoPanel.setBackground(Color.decode("#40392f"));
-        generalInfoPanel.setBorder(BorderFactory.createLineBorder(Color.decode("#ebc38a")));
-        generalInfoPanel.setBounds(0, 460, (int) screenSize.getWidth(), 60);
-
-        JLabel generalInfoLabel = new JLabel("General Info");
-        generalInfoLabel.setBorder(new EmptyBorder(20, 20, 10, 10));
-        generalInfoLabel.setHorizontalAlignment(JLabel.LEFT);
-        generalInfoLabel.setForeground(Color.decode("#ebc38a"));
-        generalInfoLabel.setFont(new Font("SansSerif", Font.PLAIN, 20));
-
-        generalInfoPanel.add(generalInfoLabel);
-
-        f.add(generalInfoPanel);
-
+    public void viewGeneralInfo() {
         String sql = "select count(work) as totalwork from work ;";
         String sql1 = " select count(client) as totalclient from client;";
         String sql4 = " select count(officeStaff) as totalsupervisor from officestaff where role='Supervisor';";
@@ -561,7 +532,6 @@ public class Admin extends Login implements workDetails, ActionListener {
             }
 
         } catch (SQLException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
 
@@ -601,27 +571,11 @@ public class Admin extends Login implements workDetails, ActionListener {
         infoPanel.add(onGoingWorkLabel);
         infoPanel.add(profitLabel);
 
-        JPanel footer = new JPanel();
-        footer.setLayout(new BorderLayout());
-        JLabel footerLabel = new JLabel(
-                "<html>copyright © 2021 - Albatross Builders <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;All Rights Reserved </html>",
-                SwingConstants.CENTER);
-        footerLabel.setVerticalAlignment(SwingConstants.TOP);
-        footerLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        footerLabel.setForeground(Color.decode("#403f3f"));
-        footer.setBackground(Color.decode("#f0f0f0"));
-        footer.setBounds(0, 670, (int) screenSize.getWidth(), 30);
-        footerLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        footer.add(footerLabel, BorderLayout.PAGE_END);
-
         f.add(infoPanel);
-        f.add(footer);
-
     }
 
     @Override
     public void viewWork(String w_id) {
-        // TODO Auto-generated method stub
         viewWorkFrame = new JFrame();
         viewWorkFrame.setLayout(null);
         viewWorkFrame.setSize((int) screenSize.getWidth(), 540);
@@ -712,7 +666,6 @@ public class Admin extends Login implements workDetails, ActionListener {
                 formaterialLabel.add(usedMaterialsLabel);
 
                 allMaterialPanel = new JPanel();
-                // allWorkPanel.setSize(800, 00);
                 allMaterialScrollPane = new JScrollPane(allMaterialPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
                 allMaterialPanel.setLayout(new BoxLayout(allMaterialPanel, BoxLayout.Y_AXIS));
@@ -765,11 +718,6 @@ public class Admin extends Login implements workDetails, ActionListener {
 
                     allMaterialPanel.add(materialPanel);
                 }
-                // }
-                // catch (SQLException e1) {
-                // // TODO Auto-generated catch block
-                // e1.printStackTrace();
-                // }
 
                 viewWorkPanel.add(currentWID);
                 viewWorkPanel.add(currentWStart);
@@ -779,13 +727,10 @@ public class Admin extends Login implements workDetails, ActionListener {
                 viewWorkPanel.add(estimateArea);
                 viewWorkPanel.add(paymentstatus);
 
-                // allAvailableWorkPanel.add(currentWorkPanel);
-                // allAvailableWorkPanel.add(currentWorkOptions);
-
             }
 
         } catch (SQLException e1) {
-            // TODO Auto-generated catch block
+
             e1.printStackTrace();
         }
         viewWorkFrame.add(titlePanel);
@@ -795,45 +740,4 @@ public class Admin extends Login implements workDetails, ActionListener {
         viewWorkFrame.setVisible(true);
     }
 
-
-//       /**
-//      * @param value
-//      */
-//     // public abstract void viewWork(void value);
-// // public void getAd_id() {
-//     // // TODO implement here
-//     // return null;
-//     // }
-
-//     /**
-//      * @return
-//      */
-//     // public void getAd_name() {
-//     // // TODO implement here
-//     // return null;
-//     // }
-
-//     /**
-//      * @param value
-//      */
-//     // public void setAd_name(void value) {
-//     // // TODO implement here
-//     // }
-
-//     /**
-//      * 
-//      */
-
-//     /**
-//      * 
-//      */
-//     /**
-//      * @param value
-//      */
-//     // public abstract void viewWork(void value);
-
-//     /**
-//      * @param value
-//      */
-//     // public abstract void viewWork(void value);
 }

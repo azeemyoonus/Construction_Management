@@ -10,9 +10,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.Border;
 
-/**
- * 
- */
 public class Materials implements ActionListener, ItemListener {
 
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -21,20 +18,17 @@ public class Materials implements ActionListener, ItemListener {
     JButton addmatBtn, addMatsubBtn, addMatToComBtn;
     JTextField matQtyArea, estimateArea, mNameField, mCostField, mSizeField, mCompanyField;
     JLabel workIdArea;
-    JComboBox materalsBox, paymentStatusComboBox;
+    JComboBox<String> materalsBox, paymentStatusComboBox, workStatusComboBox;
     JPanel allMaterialPanel;
     JScrollPane allMaterialScrollPane;
     ArrayList<String> materialNames = new ArrayList<String>();
-    JComboBox<String> workStatusComboBox;
+
     Config connection = new Config();
     Connection con = connection.dbConnect();
 
     String w_id, siteId;
     String[] str;
 
-    /**
-     * Default constructor
-     */
     public Materials(String w_id, String siteId) {
         this.w_id = w_id;
         this.siteId = siteId;
@@ -73,25 +67,21 @@ public class Materials implements ActionListener, ItemListener {
         forheaderLabel.add(headerLabel);
 
         JLabel mNameLabel = new JLabel("Material name: ");
-        // fnameLabel.setForeground(Color.decode("#ebc38a"));
         mNameLabel.setFont(new Font("SansSerif", Font.PLAIN, 25));
         mNameLabel.setBounds(80, 80, 200, 30);
         mNameLabel.setBackground(Color.decode("#d1c4b2"));
 
         JLabel mCostLabel = new JLabel("Cost : ");
-        // lnameLabel.setForeground(Color.decode("#ebc38a"));
         mCostLabel.setFont(new Font("SansSerif", Font.PLAIN, 25));
         mCostLabel.setBounds(80, 120, 200, 30);
         mCostLabel.setBackground(Color.decode("#d1c4b2"));
 
         JLabel mSizeLabel = new JLabel("Size : ");
-        // rollLabel.setForeground(Color.decode("#ebc38a"));
         mSizeLabel.setFont(new Font("SansSerif", Font.PLAIN, 25));
         mSizeLabel.setBounds(80, 165, 200, 30);
         mSizeLabel.setBackground(Color.decode("#d1c4b2"));
 
         JLabel mCompanyLabel = new JLabel("Company : ");
-        // mailLabel.setForeground(Color.decode("#ebc38a"));
         mCompanyLabel.setFont(new Font("SansSerif", Font.PLAIN, 25));
         mCompanyLabel.setBounds(80, 210, 200, 30);
         mCompanyLabel.setBackground(Color.decode("#d1c4b2"));
@@ -110,12 +100,9 @@ public class Materials implements ActionListener, ItemListener {
 
         addMatToComBtn = new JButton("ADD");
         addMatToComBtn.setBackground(Color.decode("#a39887"));
-        // addStaffBtn.setAlignmentX(300);
         addMatToComBtn.setFocusPainted(false);
         addMatToComBtn.addActionListener(this);
         addMatToComBtn.setBounds(250, 260, 150, 30);
-
-        // addMatToComFrame.getContentPane().setBackground(Color.decode("#f0f0f0"));
 
         addMatToComFrame.add(forheaderLabel);
 
@@ -157,7 +144,6 @@ public class Materials implements ActionListener, ItemListener {
         titlePanel.add(usedMaterialsLabel);
 
         allMaterialPanel = new JPanel();
-        // allWorkPanel.setSize(800, 00);
         allMaterialScrollPane = new JScrollPane(allMaterialPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         allMaterialPanel.setLayout(new BoxLayout(allMaterialPanel, BoxLayout.Y_AXIS));
@@ -165,10 +151,6 @@ public class Materials implements ActionListener, ItemListener {
         String sql3 = "select  m_id, m_name, m_cost, m_size, m_company, m_quantity from materials natural join materialspec where materials.site_id =? ";
         Border blackline = BorderFactory.createLineBorder(Color.black);
         try {
-            // System.out.println("index: "+materalsBox.getSelectedIndex());
-
-            // System.out.println(id);
-            System.out.println(this.siteId);
             PreparedStatement prepareStatement = con.prepareStatement(sql3);
             prepareStatement.setObject(1, UUID.fromString(this.siteId));
 
@@ -221,7 +203,6 @@ public class Materials implements ActionListener, ItemListener {
             }
 
         } catch (SQLException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
 
@@ -251,15 +232,13 @@ public class Materials implements ActionListener, ItemListener {
         forheaderLabel.add(headerLabel);
 
         JLabel matSpecLabel = new JLabel();
-        matSpecLabel.setText("<html>&nbsp;&nbsp;&nbsp;Material Sepc: </html>"); // set label value for textField1
+        matSpecLabel.setText("<html>&nbsp;&nbsp;&nbsp;Material Sepc: </html>");
         matSpecLabel.setBackground(Color.DARK_GRAY);
-        // matSpecLabel.setBounds(0, 80, (int) (screenSize.getHeight() + 600) / 6, 30);
         matQtyArea = new JTextField(2);
 
         JLabel matQtyLabel = new JLabel();
-        matQtyLabel.setText("<html>&nbsp;&nbsp;&nbsp;Material Quantity: </html>"); // set label value for textField1
+        matQtyLabel.setText("<html>&nbsp;&nbsp;&nbsp;Material Quantity: </html>");
         matQtyLabel.setBackground(Color.DARK_GRAY);
-        // matQtyLabel.setBounds(0, 110,  (int) (screenSize.getHeight() + 600) / 6, 30);
 
         JPanel qtyPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         qtyPanel.add(matQtyLabel);
@@ -282,7 +261,6 @@ public class Materials implements ActionListener, ItemListener {
         materialPanel.add(materalsBox);
         materialPanel.setBackground(Color.decode("#d1c4b2"));
         materialPanel.setBounds(0, 120, (int) (screenSize.getHeight() + 600) / 6, 30);
-
 
         addmatBtn = new JButton("<html>&nbsp;Add Material</html>");
         addmatBtn.setBackground(Color.decode("#40392f"));
@@ -307,30 +285,9 @@ public class Materials implements ActionListener, ItemListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
         if (e.getSource() == addmatBtn) {
-
-            String sql3 = "insert into  materials values (?,?,? )";
-
-            try {
-                // System.out.println("index: "+materalsBox.getSelectedIndex());
-
-                String id = this.materialNames.get(materalsBox.getSelectedIndex());
-                id = id.substring(0, 36);
-                System.out.println(id);
-                System.out.println(siteId);
-                PreparedStatement prepareStatement = con.prepareStatement(sql3);
-                prepareStatement.setObject(1, UUID.fromString(id));
-                prepareStatement.setInt(3, Integer.parseInt(matQtyArea.getText()));
-                prepareStatement.setObject(2, UUID.fromString(siteId));
-
-                int count = prepareStatement.executeUpdate();
-                System.out.println(count + " updated");
-
-            } catch (SQLException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
+            addmaterialToSite();
+            addMaterials.dispose();
 
         } else if (e.getSource() == addMatsubBtn) {
             String sql3 = "insert into  materialspec values (?,?,?,?,? )";
@@ -346,7 +303,6 @@ public class Materials implements ActionListener, ItemListener {
                 System.out.println(count + " updated");
 
             } catch (SQLException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
 
@@ -366,7 +322,6 @@ public class Materials implements ActionListener, ItemListener {
                     addMatToComFrame.dispose();
                 }
             } catch (SQLException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
 
@@ -380,140 +335,45 @@ public class Materials implements ActionListener, ItemListener {
         try {
             PreparedStatement prepareStatement = con.prepareStatement(sql);
             rs = prepareStatement.executeQuery();
-            int i = 0;
+
             while (rs.next()) {
                 String item = rs.getString(1) + rs.getString(2) + "  size: " + rs.getString(4) + " cost : "
                         + rs.getInt(3) + " company: " + rs.getString(5);
                 this.materialNames.add(item);
-                i++;
+
             }
 
         } catch (SQLException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
 
     }
 
-    @Override
-    public void itemStateChanged(ItemEvent e) {
-        // TODO Auto-generated method stub
+    public void addmaterialToSite() {
+        String sql3 = "insert into  materials values (?,?,? )";
 
+        try {
+
+            String id = this.materialNames.get(materalsBox.getSelectedIndex());
+            id = id.substring(0, 36);
+            System.out.println(id);
+            System.out.println(siteId);
+            PreparedStatement prepareStatement = con.prepareStatement(sql3);
+            prepareStatement.setObject(1, UUID.fromString(id));
+            prepareStatement.setInt(3, Integer.parseInt(matQtyArea.getText()));
+            prepareStatement.setObject(2, UUID.fromString(siteId));
+
+            int count = prepareStatement.executeUpdate();
+            System.out.println(count + " updated");
+
+        } catch (SQLException e1) {
+
+            e1.printStackTrace();
+        }
     }
 
-    // /**
-    // *
-    // */
-    // private void m_Name;
-
-    // /**
-    // *
-    // */
-    // private void m_company;
-
-    // /**
-    // *
-    // */
-    // protected void m_cost;
-
-    // /**
-    // *
-    // */
-    // protected void m_quantity;
-
-    // /**
-    // *
-    // */
-    // protected void total_Mcost;
-
-    // /**
-    // * @return
-    // */
-    // public void getM_Id() {
-    // // TODO implement here
-    // return null;
-    // }
-
-    // /**
-    // * @param value
-    // */
-    // public void setM_Id(void value) {
-    // // TODO implement here
-    // }
-
-    // /**
-    // *
-    // */
-    // public void materialCost() {
-    // // TODO implement here
-    // }
-
-    // /**
-    // * @return
-    // */
-    // public void getM_Id() {
-    // // TODO implement here
-    // return null;
-    // }
-
-    // /**
-    // * @return
-    // */
-    // public void getM_Name() {
-    // // TODO implement here
-    // return null;
-    // }
-
-    // /**
-    // * @param value
-    // */
-    // public void setM_Name(void value) {
-    // // TODO implement here
-    // }
-
-    // /**
-    // * @return
-    // */
-    // public void getM_company() {
-    // // TODO implement here
-    // return null;
-    // }
-
-    // /**
-    // * @param value
-    // */
-    // public void setM_company(void value) {
-    // // TODO implement here
-    // }
-
-    // /**
-    // * @return
-    // */
-    // public void getM_quantity() {
-    // // TODO implement here
-    // return null;
-    // }
-
-    // /**
-    // * @param value
-    // */
-    // public void setM_quantity(void value) {
-    // // TODO implement here
-    // }
-
-    // /**
-    // * @return
-    // */
-    // public void getTotal_Mcost() {
-    // // TODO implement here
-    // return null;
-    // }
-
-    // /**
-    // * @param value
-    // */
-    // public void setTotal_Mcost(void value) {
-    // // TODO implement here
-    // }
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+    }
 
 }

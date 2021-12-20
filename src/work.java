@@ -17,15 +17,14 @@ public class work implements ActionListener, ItemListener {
   JTextField nameField, siteLocField, siteAreaField, estimateArea;
   JButton addWorkBtn, updateWorkBtn;
   JLabel workIdArea;
-  JComboBox workTypesBox, paymentStatusComboBox, workStatusComboBox;
+  JComboBox<String> workTypesBox, paymentStatusComboBox, workStatusComboBox;
 
   Config connection = new Config();
   Connection con = connection.dbConnect();
 
   String workTypes[] = { "House", "offices", "Shopping Complex" };
-  private String name;
+  private String name, c_id;
   public int s_day, s_month, s_year, e_day, e_month, e_year;
-  public String c_id;
 
   public work(String c_id) {
     if (c_id != null) {
@@ -44,7 +43,7 @@ public class work implements ActionListener, ItemListener {
         }
 
       } catch (SQLException e1) {
-        // TODO Auto-generated catch block
+
         e1.printStackTrace();
       }
 
@@ -68,9 +67,8 @@ public class work implements ActionListener, ItemListener {
       forheaderLabel.add(headerLabel);
 
       JLabel userLabel = new JLabel();
-      userLabel.setText("<html>&nbsp;&nbsp;&nbsp;Name: </html>"); // set label value for textField1
+      userLabel.setText("<html>&nbsp;&nbsp;&nbsp;Name: </html>");
       userLabel.setBackground(Color.DARK_GRAY);
-      // titlePanel.add(workLabel);
 
       nameField = new JTextField(15);
       nameField.setText(this.name);
@@ -78,11 +76,11 @@ public class work implements ActionListener, ItemListener {
       siteAreaField = new JTextField(15);
 
       JLabel siteLocLabel = new JLabel();
-      siteLocLabel.setText("<html>&nbsp;&nbsp;&nbsp;Site Location: </html>"); // set label value for textField1
+      siteLocLabel.setText("<html>&nbsp;&nbsp;&nbsp;Site Location: </html>");
       siteLocLabel.setBackground(Color.DARK_GRAY);
 
       JLabel siteAreaLabel = new JLabel();
-      siteAreaLabel.setText("<html>&nbsp;&nbsp;&nbsp;Site Area in sq.ft: </html>"); // set label value for textField1
+      siteAreaLabel.setText("<html>&nbsp;&nbsp;&nbsp;Site Area in sq.ft: </html>");
       siteAreaLabel.setBackground(Color.DARK_GRAY);
 
       JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -98,7 +96,7 @@ public class work implements ActionListener, ItemListener {
       sitePanel.setBackground(Color.decode("#d1c4b2"));
 
       JLabel workTypeLabel = new JLabel();
-      workTypeLabel.setText("<html>&nbsp;&nbsp;&nbsp;Work Type </html>"); // set label value for textField1
+      workTypeLabel.setText("<html>&nbsp;&nbsp;&nbsp;Work Type </html>");
       workTypeLabel.setBackground(Color.DARK_GRAY);
 
       workTypesBox = new JComboBox<>(workTypes);
@@ -131,11 +129,8 @@ public class work implements ActionListener, ItemListener {
 
   }
 
-  /**
-   * 
-   */
   public void updateWorkProgess(String w_id) {
-    System.out.println("reached   .");
+
     JFrame updateWorkFrame = new JFrame();
     updateWorkFrame.setLayout(null);
     updateWorkFrame.setSize((int) screenSize.getWidth() / 2, 310);
@@ -178,7 +173,6 @@ public class work implements ActionListener, ItemListener {
     workStatusComboBox.setBackground(Color.white);
 
     workIdArea = new JLabel(w_id);
-    // workIdArea.setPreferredSize(new Dimension(400, 50));
 
     estimateArea = new JTextField();
 
@@ -202,13 +196,8 @@ public class work implements ActionListener, ItemListener {
     updateWorkFrame.add(estLabel);
     updateWorkFrame.add(estimateArea);
 
-    // updateWorkFrame.add(payLabel);
-    // updateWorkFrame.add(paymentStatusComboBox);
-
     updateWorkFrame.add(workStatusLabel);
     updateWorkFrame.add(workStatusComboBox);
-    // addMatFrame.add(l5);
-    // addMatFrame.add(workStatus);
     updateWorkFrame.add(updateWorkBtn);
     updateWorkFrame.setVisible(true);
 
@@ -216,14 +205,12 @@ public class work implements ActionListener, ItemListener {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    // TODO Auto-generated method stub
+
     if (e.getSource() == addWorkBtn) {
-      System.out.println("Add work req");
       String sql = "insert into work (w_id, c_id, s_day, s_month, s_year, workType) values (?,?,?,?,?,?); insert into site (s_id, w_id, siteloc, totalArea) values (?,?,?,?);";
       this.s_day = LocalDate.now().getDayOfMonth();
       this.s_month = LocalDate.now().getMonthValue();
       this.s_year = LocalDate.now().getYear();
-      System.out.println(s_day + " " + s_month + " " + s_year);
       try {
         UUID w_id = UUID.randomUUID();
         UUID site_id = UUID.randomUUID();
@@ -246,7 +233,7 @@ public class work implements ActionListener, ItemListener {
         this.reqWorkFrame.dispose();
 
       } catch (SQLException e1) {
-        // TODO Auto-generated catch block
+
         e1.printStackTrace();
       }
     } else if (e.getSource() == updateWorkBtn) {
@@ -267,7 +254,7 @@ public class work implements ActionListener, ItemListener {
 
           System.out.println(count + " row updated with date");
         } catch (SQLException e1) {
-          // TODO Auto-generated catch block
+
           e1.printStackTrace();
         }
 
@@ -281,7 +268,7 @@ public class work implements ActionListener, ItemListener {
           int count = prepareStatement.executeUpdate();
           System.out.println(count + " update without date");
         } catch (SQLException e1) {
-          // TODO Auto-generated catch block
+
           e1.printStackTrace();
         }
       }
@@ -292,10 +279,6 @@ public class work implements ActionListener, ItemListener {
 
   @Override
   public void itemStateChanged(ItemEvent e) {
-    // TODO Auto-generated method stub
-    if (e.getSource() == workTypesBox) {
-      //
-    }
 
   }
 

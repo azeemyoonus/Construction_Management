@@ -3,8 +3,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
-
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.*;
 
@@ -17,23 +15,19 @@ public class Payment implements ActionListener {
     JFrame paymentFrame;
     JLabel amountLabel;
     JButton Make_PaymentBtn;
-   
+
     Config connection = new Config();
     Connection con = connection.dbConnect();
 
-    public int estimate;
+    public int estimate, count;
     public String w_id;
-    public int count;
 
-    /**
-     * Default constructor
-     */
     public Payment(String w_id) {
         this.w_id = w_id;
         if (checkWorkFinish())
             makePayment(w_id);
         else if (alreadyPaymentDone()) {
-         
+
             JFrame f = new JFrame();
             f.setVisible(true);
             f.setSize(400, 250);
@@ -62,7 +56,7 @@ public class Payment implements ActionListener {
                 this.count = 1;
 
         } catch (SQLException e1) {
-            // TODO Auto-generated catch block
+
             e1.printStackTrace();
         }
         if (this.count == 1)
@@ -86,7 +80,7 @@ public class Payment implements ActionListener {
                 this.count = 1;
 
         } catch (SQLException e1) {
-            // TODO Auto-generated catch block
+
             e1.printStackTrace();
         }
         if (this.count == 1)
@@ -116,12 +110,10 @@ public class Payment implements ActionListener {
         paymentFrame.setLocation((int) screenSize.getWidth() / 3, (int) screenSize.getHeight() / 3);
         paymentFrame.getContentPane().setBackground(Color.decode("#d1c4b2"));
 
-        // f.setTitle("Payment Portal");
-
         JPanel forheaderLabel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         forheaderLabel.setBackground(Color.decode("#40392f"));
         forheaderLabel.setBorder(BorderFactory.createLineBorder(Color.decode("#ebc38a")));
-        forheaderLabel.setBounds(0, 0, (int) screenSize.getWidth()/2 , 80);
+        forheaderLabel.setBounds(0, 0, (int) screenSize.getWidth() / 2, 80);
 
         JLabel headerLabel = new JLabel("Payment Details");
         headerLabel.setBorder(new EmptyBorder(20, 20, 20, 20));
@@ -143,7 +135,7 @@ public class Payment implements ActionListener {
             }
 
         } catch (SQLException e1) {
-            // TODO Auto-generated catch block
+
             e1.printStackTrace();
         }
 
@@ -169,26 +161,9 @@ public class Payment implements ActionListener {
         paymentFrame.add(submitPanel);
     }
 
-    /**
-     * 
-     */
-    // public void payment_id;
-
-    // /**
-    // *
-    // */
-    // public void Estimate;
-
-    /**
-     * 
-    //  */
-    // public void totalCost() {
-    //     // TODO implement here
-    // }
-
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
+
         if (e.getSource() == Make_PaymentBtn) {
 
             String sql1 = "insert into payment values(?,?,?); update work set paymentstatus='true' ";
@@ -225,7 +200,7 @@ public class Payment implements ActionListener {
                 }
 
             } catch (SQLException e1) {
-                // TODO Auto-generated catch block
+
                 e1.printStackTrace();
             }
 

@@ -1,4 +1,4 @@
-import java.util.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,33 +9,23 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.*;
 import java.util.UUID;
 
-/**
- * 
- */
-
 public class Client extends Login implements workDetails, ActionListener {
+
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    JFrame f, viewWorkFrame;
-    JPanel currentWorkPanel, viewWorkPanel, allWorkPanel, allPreviousWorkPanel;
-    JPanel currentWorkOptions, formaterialLabel, allMaterialPanel;
-    JTextField usernameField, loginUsernameField;
-    JTextField fName;
-    JTextField lName;
-    JTextField mailIdField, phoneField;
+    JFrame f, viewWorkFrame, createFrame, loginFrame;
+    JPanel currentWorkPanel, viewWorkPanel, allWorkPanel, allPreviousWorkPanel,
+            currentWorkOptions, formaterialLabel, allMaterialPanel;
+    JTextField usernameField, loginUsernameField, fName, lName, mailIdField, phoneField;
     JScrollPane allWorkScrollPane, allPreviousWorkScrollPane, allMaterialScrollPane;
-    JPasswordField passwordField, loginPasswordField;
-    JPasswordField cnfPasswordField;
-    Boolean loginStatus = false;
-    JFrame createFrame;
-    JFrame loginFrame;
-    JButton loginBtn, loginSubmitBtn, accCreateClnBtn, goTologinBtn;
-    JButton createClnBtn, reqAworkBtn, refreshBtn, logOutBtn, paymentBtn;
+    JPasswordField passwordField, loginPasswordField, cnfPasswordField;
+    JButton loginBtn, loginSubmitBtn, accCreateClnBtn, goTologinBtn, createClnBtn,
+            reqAworkBtn, refreshBtn, logOutBtn, paymentBtn;
+
     work w1;
     Config connection = new Config();
     Connection con = connection.dbConnect();
 
-    public String StringId, site_id, supervisorName, supervisorMail, supervisorPhone;
-    private String name;
+    public String c_id, site_id, supervisorName, supervisorMail, supervisorPhone, name;
 
     public Client() {
         login();
@@ -79,7 +69,7 @@ public class Client extends Login implements workDetails, ActionListener {
         fName = new JTextField(15); // set length of the text
         lName = new JTextField(15);
         mailIdField = new JTextField(35);
-        phoneField = new JTextField(10);
+        phoneField = new JTextField(20);
         usernameField = new JTextField(25);
 
         // create label for password
@@ -146,7 +136,7 @@ public class Client extends Login implements workDetails, ActionListener {
 
     @Override
     public void login() {
-        // TODO Auto-generated method stub
+
         System.out.print("Login as Client");
 
         loginFrame = new JFrame();
@@ -159,18 +149,15 @@ public class Client extends Login implements workDetails, ActionListener {
         supervisorLabel.setFont(new Font("SansSerif", Font.PLAIN, 38));
         titlePanel.add(supervisorLabel);
         JLabel userLabel = new JLabel();
-        userLabel.setText("<html>&nbsp;&nbsp;&nbsp;Username</html>"); // set label value for textField1
+        userLabel.setText("<html>&nbsp;&nbsp;&nbsp;Username</html>");
         userLabel.setBackground(Color.DARK_GRAY);
 
-        // create text field to get username from the user
-        loginUsernameField = new JTextField(15); // set length of the text
+        loginUsernameField = new JTextField(30);
 
-        // create label for password
         JLabel passLabel = new JLabel();
-        passLabel.setText("<html>&nbsp;&nbsp;&nbsp;Password</html>"); // set label value for textField2
+        passLabel.setText("<html>&nbsp;&nbsp;&nbsp;Password</html>");
 
-        // create text field to get password from the user
-        loginPasswordField = new JPasswordField(15);
+        loginPasswordField = new JPasswordField(30);
 
         loginSubmitBtn = new JButton("<html>&nbsp;Submit</html>");
         loginSubmitBtn.setBackground(Color.decode("#40392f"));
@@ -185,7 +172,6 @@ public class Client extends Login implements workDetails, ActionListener {
         JPanel usernamePanel = new JPanel();
         usernamePanel.add(userLabel);
         usernamePanel.add(loginUsernameField);
-        // usernamePanel.setAlignmentX(alignmentX);
 
         JPanel passwordPanel = new JPanel();
         passwordPanel.add(passLabel);
@@ -219,15 +205,14 @@ public class Client extends Login implements workDetails, ActionListener {
                 ResultSet rs = prepareStatement.executeQuery();
                 while (rs.next()) {
                     System.out.println(rs.getObject(1) + " " + rs.getString(2));
-                    this.StringId = rs.getString(1);
-                    loadClientPanel(StringId);
+                    this.c_id = rs.getString(1);
+                    loadClientPanel(c_id);
 
                     loginFrame.dispose();
 
                 }
 
             } catch (SQLException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
 
@@ -240,7 +225,7 @@ public class Client extends Login implements workDetails, ActionListener {
             createFrame.dispose();
             con = connection.dbConnect();
 
-            String sql = "insert into client values(?,?,?); insert into logindetails(id, username, password) values (?,?,?); insert into contact(id, phone, mailid) values(?, ?, ?)";
+            String sql = "insert into client values(?,?,?); insert into logindetails(id, username, password) values (?,?,?); insert into contact(id, mailid, phone ) values(?, ?, ?)";
             try {
                 UUID idOne = UUID.randomUUID();
 
@@ -261,7 +246,7 @@ public class Client extends Login implements workDetails, ActionListener {
                 System.out.println(updatedCount + "  updated ");
 
             } catch (SQLException e1) {
-                // TODO Auto-generated catch block
+
                 e1.printStackTrace();
             }
         } else if (e.getSource() == goTologinBtn) {
@@ -269,11 +254,11 @@ public class Client extends Login implements workDetails, ActionListener {
             login();
         } else if (e.getSource() == reqAworkBtn) {
             System.out.println("Req a work ");
-            w1 = new work(StringId);
+            w1 = new work(c_id);
         } else if (e.getSource() == refreshBtn) {
             System.out.println("Referesh");
             this.f.dispose();
-            loadClientPanel(this.StringId);
+            loadClientPanel(this.c_id);
 
         } else if (e.getSource() == logOutBtn) {
             System.out.println("Log Out Man");
@@ -285,21 +270,21 @@ public class Client extends Login implements workDetails, ActionListener {
             if (code.equals("ACW")) {
 
             } else if (code.equals("UMT")) {
-                Materials m1 = new Materials(idneed);
+                new Materials(idneed);
 
             } else if (code.equals("GTR")) {
                 System.out.println("here  ...");
                 viewWork(idneed);
             } else if (code.equals("PAY")) {
-                Payment p1 = new Payment(idneed);
+                new Payment(idneed);
             } else if (code.equals("CTS")) {
-                contactClient(idneed);
+                contactSupervisor(idneed);
             }
         }
 
     }
 
-    public void contactClient(String officeStaff_id) {
+    public void contactSupervisor(String officeStaff_id) {
         String sql = " select fname, lname from officestaff where id=? ";
         String sql1 = " select phone, mailid from contact where oid=?";
         ResultSet rs, rs1;
@@ -322,7 +307,7 @@ public class Client extends Login implements workDetails, ActionListener {
             }
 
         } catch (SQLException e1) {
-            // TODO Auto-generated catch block
+
             e1.printStackTrace();
         }
         JFrame f = new JFrame();
@@ -331,7 +316,6 @@ public class Client extends Login implements workDetails, ActionListener {
         f.setLayout(null);
         f.setLocation((int) screenSize.getWidth() / 3, (int) screenSize.getHeight() / 3);
         f.getContentPane().setBackground(Color.decode("#d1c4b2"));
-        // f.setTitle("Contact Supervisor");
 
         JPanel forheaderLabel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         forheaderLabel.setBackground(Color.decode("#40392f"));
@@ -377,29 +361,24 @@ public class Client extends Login implements workDetails, ActionListener {
 
     }
 
-    public void loadClientPanel(String stringID) {
+    public void loadClientPanel(String c_id) {
 
-        // todo fetch loggined supervisor details from database
         String sql = " select * from client where c_id=? ";
         ResultSet rs;
 
         try {
             PreparedStatement prepareStatement = con.prepareStatement(sql);
-            prepareStatement.setObject(1, UUID.fromString(stringID));
+            prepareStatement.setObject(1, UUID.fromString(c_id));
             rs = prepareStatement.executeQuery();
             while (rs.next()) {
-                // System.out.println(rs.getObject(1) + " " + rs.getString(2));
                 this.name = rs.getString(2) + rs.getString(3);
-                // loadClientPanel(rs.getString(1));
-                // loginFrame.dispose();
             }
 
         } catch (SQLException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
 
-        f = new JFrame();// creating instance of JFrame
+        f = new JFrame();
         f.getContentPane().invalidate();
         f.setSize((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
         f.setLocation((int) screenSize.getWidth() / 4, (int) screenSize.getHeight() / 4);
@@ -433,13 +412,11 @@ public class Client extends Login implements workDetails, ActionListener {
 
         refreshBtn = new JButton("Refresh");
         refreshBtn.setBackground(Color.decode("#a39887"));
-        // getReportBtn.setForeground(Color.decode("#ebc38a"));
         refreshBtn.setFocusPainted(false);
         refreshBtn.addActionListener(this);
 
         logOutBtn = new JButton("Log Out");
         logOutBtn.setBackground(Color.decode("#a39887"));
-        // getReportBtn.setForeground(Color.decode("#ebc38a"));
         logOutBtn.setFocusPainted(false);
         logOutBtn.addActionListener(this);
 
@@ -453,8 +430,6 @@ public class Client extends Login implements workDetails, ActionListener {
         welcomeLabel.setHorizontalAlignment(JLabel.LEFT);
         welcomeLabel.setBorder(new EmptyBorder(0, 20, 0, 0));
         welcomeLabel.setFont(new Font("SansSerif", Font.PLAIN, 35));
-        // welcomeLabel.setBounds(0, 0, (int)screenSize.getWidth(), 100);
-        // welcomeLabel.setForeground(Color.decode("#a38f72"));
 
         JPanel forcurrentWorkLabel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         forcurrentWorkLabel.setBackground(Color.decode("#40392f"));
@@ -465,7 +440,6 @@ public class Client extends Login implements workDetails, ActionListener {
         currentWorkLabel.setBorder(new EmptyBorder(20, 20, 10, 10));
         currentWorkLabel.setHorizontalAlignment(JLabel.LEFT);
         currentWorkLabel.setForeground(Color.decode("#ebc38a"));
-
         currentWorkLabel.setFont(new Font("SansSerif", Font.PLAIN, 20));
 
         forcurrentWorkLabel.add(currentWorkLabel);
@@ -473,10 +447,7 @@ public class Client extends Login implements workDetails, ActionListener {
         headerPanel.add(logoLabel);
         headerPanel.add(titleLabel);
         welcomePanel.add(welcomeLabel);
-
         welcomePanel.add(welcomBtnPanel);
-
-        // currentWorkPanel.add(currentWorkOptions);
 
         JPanel forPreviousWorkLabel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         forPreviousWorkLabel.setBackground(Color.decode("#40392f"));
@@ -506,9 +477,7 @@ public class Client extends Login implements workDetails, ActionListener {
         footerLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
         footer.add(footerLabel, BorderLayout.PAGE_END);
 
-        // dummy.setBounds(0, 670, (int)screenSize.getWidth(), 60);
         allWorkPanel = new JPanel();
-        // allWorkPanel.setSize(800, 00);
         allWorkScrollPane = new JScrollPane(allWorkPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         allWorkPanel.setLayout(new BoxLayout(allWorkPanel, BoxLayout.Y_AXIS));
@@ -517,12 +486,20 @@ public class Client extends Login implements workDetails, ActionListener {
         f.add(headerPanel);
         f.add(welcomePanel);
         f.add(forcurrentWorkLabel);
+        viewOngoingWork();
+        f.add(forPreviousWorkLabel);
+        viewPreviousWork();
+        f.add(footer);
+        f.setVisible(true);// making the frame visible
 
+    }
+
+    public void viewOngoingWork() {
         String sql2 = "select w_id, s_day, s_month, s_year, e_day, e_month, e_year, siteloc,fname, totalarea, totalestimate, paymentstatus, s_id, id from officestaff natural join work natural join site where work.c_id=? and officestaff.id=work.o_id";
         ResultSet workDetails;
         try {
             PreparedStatement prepareStatement1 = con.prepareStatement(sql2);
-            prepareStatement1.setObject(1, UUID.fromString(stringID));
+            prepareStatement1.setObject(1, UUID.fromString(c_id));
             workDetails = prepareStatement1.executeQuery();
 
             while (workDetails.next()) {
@@ -567,26 +544,22 @@ public class Client extends Login implements workDetails, ActionListener {
 
                 JButton materialBtn = new JButton("Used Materials");
                 materialBtn.setBackground(Color.decode("#a39887"));
-                // materialBtn.setForeground(Color.decode("#0a0a0a"));
                 materialBtn.setFocusPainted(false);
                 materialBtn.setName("UMT" + workDetails.getString(13));
                 materialBtn.addActionListener(this);
 
                 JButton paymentBtn = new JButton("Payment");
                 paymentBtn.setBackground(Color.decode("#a39887"));
-                // contactClient.setForeground(Color.decode("#0a0a0a"));
                 paymentBtn.setName("PAY" + workDetails.getString(1));
                 paymentBtn.addActionListener(this);
                 paymentBtn.setFocusPainted(false);
 
                 JButton contactClient = new JButton("Contact Supervisor");
                 contactClient.setBackground(Color.decode("#a39887"));
-                // contactClient.setForeground(Color.decode("#0a0a0a"));
                 contactClient.setFocusPainted(false);
                 contactClient.setName("CTS" + workDetails.getString(14));
                 contactClient.addActionListener(this);
 
-                // currentWorkOptions.add(UpdateBtn);
                 currentWorkOptions.add(materialBtn);
                 currentWorkOptions.add(paymentBtn);
                 currentWorkOptions.add(contactClient);
@@ -602,30 +575,18 @@ public class Client extends Login implements workDetails, ActionListener {
                 currentWorkPanel.add(PaymentStatusArea);
 
                 currentWorkPanel.add(currentWorkOptions);
-                // allWorkScrollBar.add(currentWorkPanel);
-                // allWorkScrollBar.add(currentWorkOptions);
                 allWorkPanel.add(currentWorkPanel);
-                // allWorkPanel.add(currentWorkOptions);
-                // f.add(currentWorkPanel);
-                // f.add(currentWorkOptions);
-
             }
 
         } catch (SQLException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
 
-        // allWorkScrollPane.setPreferredSize(new Dimension((int)
-        // screenSize.getWidth(),600));
-        // f.add(currentWorkPanel);
-        // f.add(currentWorkOptions);
-        // f.add(dummy);
         f.add(allWorkScrollPane);
-        f.add(forPreviousWorkLabel);
+    }
 
+    public void viewPreviousWork() {
         allPreviousWorkPanel = new JPanel(new GridLayout(3, 0));
-        // allPreviousWorkPanel.setSize(800, 00);
         allPreviousWorkScrollPane = new JScrollPane(allPreviousWorkPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         allPreviousWorkPanel.setLayout(new BoxLayout(allPreviousWorkPanel, BoxLayout.Y_AXIS));
@@ -635,7 +596,7 @@ public class Client extends Login implements workDetails, ActionListener {
         ResultSet previousWorkDetails;
         try {
             PreparedStatement prepareStatement1 = con.prepareStatement(sql3);
-            prepareStatement1.setObject(1, UUID.fromString(stringID));
+            prepareStatement1.setObject(1, UUID.fromString(c_id));
             previousWorkDetails = prepareStatement1.executeQuery();
 
             while (previousWorkDetails.next()) {
@@ -692,7 +653,6 @@ public class Client extends Login implements workDetails, ActionListener {
 
                 JButton getReportBtn = new JButton("Get Report");
                 getReportBtn.setBackground(Color.decode("#a39887"));
-                // getReportBtn.setForeground(Color.decode("#ebc38a"));
                 getReportBtn.setName("GTR" + previousWorkDetails.getString(1));
                 getReportBtn.setFocusPainted(false);
                 getReportBtn.addActionListener(this);
@@ -714,28 +674,21 @@ public class Client extends Login implements workDetails, ActionListener {
 
             }
         } catch (SQLException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
 
         f.add(allPreviousWorkScrollPane);
-        // f.add(previousWorkOptions);
-        f.add(footer);
-        f.setVisible(true);// making the frame visible
-        // f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);// terminate program when
-        // closes frame
     }
 
     @Override
     public void logout() {
-        // TODO Auto-generated method stub
         f.dispose();
 
     }
 
     @Override
     public void viewWork(String w_id) {
-        // TODO Auto-generated method stub
+
         viewWorkFrame = new JFrame();
         viewWorkFrame.setLayout(null);
         viewWorkFrame.setSize((int) screenSize.getWidth(), 540);
@@ -879,11 +832,6 @@ public class Client extends Login implements workDetails, ActionListener {
 
                     allMaterialPanel.add(materialPanel);
                 }
-                // }
-                // catch (SQLException e1) {
-                // // TODO Auto-generated catch block
-                // e1.printStackTrace();
-                // }
 
                 viewWorkPanel.add(currentWID);
                 viewWorkPanel.add(currentWStart);
@@ -893,13 +841,9 @@ public class Client extends Login implements workDetails, ActionListener {
                 viewWorkPanel.add(estimateArea);
                 viewWorkPanel.add(paymentstatus);
 
-                // allAvailableWorkPanel.add(currentWorkPanel);
-                // allAvailableWorkPanel.add(currentWorkOptions);
-
             }
 
         } catch (SQLException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
         viewWorkFrame.add(titlePanel);
@@ -909,93 +853,5 @@ public class Client extends Login implements workDetails, ActionListener {
         viewWorkFrame.setVisible(true);
 
     }
-
-    /**
-     * 
-     */
-    // private void c_Id;
-
-    /**
-     * 
-     */
-    // private void c_Name;
-
-    /**
-     * 
-     */
-    // public void signUp() {
-    // // TODO implement here
-    // }
-
-    // /**
-    // *
-    // */
-    // public void workReq() {
-    // // TODO implement here
-    // }
-
-    // /**
-    // * @param value
-    // */
-    // // public void getAllMyWork(void value) {
-    // // TODO implement here
-    // // }
-
-    // /**
-    // *
-    // */
-    // public void getpastWork() {
-    // // TODO implement here
-    // }
-
-    // /**
-    // *
-    // */
-    // public void cancelWork() {
-    // // TODO implement here
-    // }
-
-    // /**
-    // * @param value
-    // */
-    // // public void makePayment(void value) {
-    // // // TODO implement here
-    // // }
-
-    // /**
-    // * @return
-    // */
-    // // public void getC_Id() {
-    // // // TODO implement here
-    // // return null;
-    // // }
-
-    // /**
-    // * @return
-    // */
-    // // public void getC_Name() {
-    // // // TODO implement here
-    // // return null;
-    // // }
-
-    // /**
-    // * @param value
-    // */
-    // // public void setC_Name(void value) {
-    // // // TODO implement here
-    // // }
-
-    // /**
-    // *
-    // */
-
-    // /**
-    // *
-    // */
-
-    // /**
-    // * @param value
-    // */
-    // // public abstract void viewWork(void value);
 
 }
